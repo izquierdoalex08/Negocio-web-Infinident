@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinident – Pacientes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue-dark:  #0d2b55;
+            --blue-mid:   #1a4a8a;
+            --blue:       #2563c4;
+            --blue-soft:  #4a90d9;
+            --blue-light: #b8d8f5;
+            --blue-pale:  #e8f2fb;
+            --white:      #ffffff;
+            --ink:        #0e1e35;
+            --muted:      #4a6080;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #f0f6fd;
+            color: var(--ink);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 55%, var(--blue-soft) 100%);
+            padding: 44px 40px 36px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 55% 70% at 85% 15%, rgba(74,144,217,.22) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 55% at 10% 85%, rgba(13,43,85,.35) 0%, transparent 55%);
+            pointer-events: none;
+        }
+        .header-inner {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        header img {
+            object-fit: contain;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,.3);
+            background: rgba(255,255,255,.1);
+            padding: 6px;
+        }
+        .header-text h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-weight: 700;
+            font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+            color: var(--white);
+            letter-spacing: .04em;
+            line-height: 1;
+        }
+        .header-text span {
+            display: block;
+            margin-top: 5px;
+            font-size: .75rem;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--blue-light);
+            font-weight: 300;
+        }
+        nav.menu-principal {
+            background: var(--blue-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+        nav.menu-principal ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0 12px;
+        }
+        nav.menu-principal a {
+            display: block;
+            padding: 13px 16px;
+            font-size: .8rem;
+            font-weight: 500;
+            letter-spacing: .09em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.75);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: color .2s, border-color .2s;
+        }
+        nav.menu-principal a:hover {
+            color: var(--blue-light);
+            border-bottom-color: var(--blue-soft);
+        }
+        .contenedor-principal { flex: 1; display: flex; flex-direction: column; }
+        main {
+            flex: 1;
+            padding: clamp(28px, 5vw, 56px) clamp(18px, 5vw, 72px);
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .card {
+            background: var(--white);
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--blue-light);
+            animation: fadeUp .45s ease both;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .card-header {
+            background: linear-gradient(90deg, var(--blue-dark), var(--blue-mid));
+            padding: 28px 36px 24px;
+        }
+        .card-header h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-size: clamp(1.4rem, 2.8vw, 2rem);
+            font-weight: 700;
+            color: var(--white);
+        }
+        .card-header p {
+            margin-top: 6px;
+            font-size: .85rem;
+            color: var(--blue-light);
+            letter-spacing: .04em;
+        }
+        .card-body { padding: 28px 36px 36px; overflow-x: auto; }
+        @media (max-width: 680px) {
+            .card-header { padding: 22px 20px; }
+            .card-body { padding: 18px 16px; }
+        }
+
+        /* ── TABLA ── */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .86rem;
+        }
+        thead th {
+            background: var(--blue-mid);
+            color: var(--white);
+            font-weight: 500;
+            font-size: .75rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: 13px 16px;
+            text-align: left;
+            white-space: nowrap;
+        }
+        thead th:first-child { border-radius: 6px 0 0 0; }
+        thead th:last-child  { border-radius: 0 6px 0 0; }
+        tbody tr { border-bottom: 1px solid var(--blue-pale); }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:nth-child(even) td { background: var(--blue-pale); }
+        tbody tr:hover td { background: #d4eaf8; }
+        td {
+            padding: 12px 16px;
+            color: var(--ink);
+            vertical-align: middle;
+        }
+        td:first-child {
+            font-weight: 600;
+            color: var(--blue-mid);
+            font-size: .8rem;
+            letter-spacing: .04em;
+        }
+
+        /* ── BADGE ESTADO ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: .75rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .badge-nombreh { background: #cce6ff; color:  #0080ff; }
+        .badge-nombref { background: #ffccdd; color: #ff4da6; }
+
+        footer {
+            background: var(--blue-dark);
+            border-top: 3px solid var(--blue-mid);
+            color: rgba(255,255,255,.55);
+            padding: 20px 40px;
+            text-align: center;
+            font-size: .76rem;
+            letter-spacing: .1em;
+        }
+        footer strong { color: var(--blue-light); font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <img src="logonegocio.PNG" alt="Logo de Infinident" style="width: 120px; height: 120px;">
+        <div class="header-text">
+            <h1>Infinident</h1>
+            <span>Health &amp; Esthetics</span>
+        </div>
+    </div>
+</header>
+
+<nav class="menu-principal">
+    <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="odontologos.html">Odontólogos</a></li>
+        <li><a href="pacientes.html">Pacientes</a></li>
+        <li><a href="citas.html">Citas</a></li>
+        <li><a href="recetas.html">Recetas</a></li>
+        <li><a href="historial.html">Historial</a></li>
+        <li><a href="pagos.html">Pagos</a></li>
+        <li><a href="inventario.html">Inventario</a></li>
+    </ul>
+</nav>
+
+<div class="contenedor-principal">
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h2>Control y Registro de Pacientes</h2>
+                <p>Base de datos actual de los pacientes registrados en la clínica.</p>
+            </div>
+            <div class="card-body">
+                <table>
+                    <thead>
+                            <th> Nombre Completo </th>
+                            <th> Fecha de nacimiento </th>
+                            <th> Genero </th>
+                            <th> Sangre </th>
+                            <th> Alergías/Padecimientos </th>
+                            <th> Teléfono </th>
+			    <th> Correo </th>
+ 			    <th> Curp </th>
+                            <th> Dirección </th>
+		            <th> Contacto emergencia </th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td> <span class="badge badge-nombref"> Ana García </td>
+                            <td> 12/05/1985 </td>
+                            <td> Femenino </td>
+			    <td> O+ </td>
+                            <td> Penicilina </td>
+                            <td> 555-0101 </td>
+                            <td> ana@mail.com</td>
+ 		            <td> GALA850512 </td>
+                            <td> Calle Sol #123 </td>
+			    <td> Luis G. (Esposo) 555-9988 </td>
+                        </tr>
+                        <tr>
+                            <td> <span class="badge badge-nombreh"> Carlos Ruiz M. </td>
+                            <td> 22/11/1992 </td>
+                            <td> Masculino </td>
+			    <td> A+ </td>
+                            <td> Ninguno </td>
+                            <td> 555-0202 </td>
+                            <td> cruiz@mail.com</td>
+ 		            <td> RUMC921122 </td>
+                            <td> Av. Luna #45 </td>
+			    <td> Rosa M. (Madre) 555-9977 </td>
+                        </tr>
+                        <tr>
+                            <td> <span class="badge badge-nombref"> Elena Torres </td>
+			    <td> 05/01/1978 </td>
+                            <td> Femenino </td>
+			    <td> B- </td>
+                            <td> Látex </td>
+                            <td> 555-0303 </td>
+                            <td> elena@mail.com </td>
+ 		            <td> TOPE780105 </td>
+                            <td> Priv. Roble #8 </td>
+			    <td> Juan T. (Hijo) 555-9966 </td>
+                        </tr>
+                        <tr>
+                            <td> <span class="badge badge-nombreh"> Jorge Slim </td>
+			    <td> 30/08/2005 </td>
+                            <td> Masculino </td>
+			    <td> O+ </td>
+                            <td> Polen </td>
+                            <td> 555-0404 </td>
+                            <td> jorge@mail.com </td>
+ 		            <td> SLVJ050830 </td>
+                            <td> Col. Centro #9 </td>
+			    <td> Sara V. (Madre) 555-9955 </td>
+                        </tr>
+			<tr>
+                            <td> <span class="badge badge-nombref"> Sofia Lara </td>
+			    <td> 14/02/1990 </td>
+                            <td> Femenino </td>
+			    <td> AB+ </td>
+                            <td> Aspirina  </td>
+                            <td> 555-0505 </td>
+                            <td> slara@mail.com </td>
+ 		            <td> LAKS900214 </td>
+                            <td> Calle 5ta #10 </td>
+			    <td> Pedro L. (Padre) 555-9944 </td>
+                        </tr>
+			<tr>
+                            <td> <span class="badge badge-nombreh"> Miguel Paz </td>
+			    <td> 19/07/1982 </td>
+                            <td> Masculino </td>
+			    <td> O- </td>
+                            <td> Ninguna  </td>
+                            <td> 555-0606 </td>
+                            <td> mpaz@mail.com </td>
+ 		            <td> PAHM820719 </td>
+                            <td> Av. Reforma #2 </td>
+			    <td> Ana P. (Hermana) 555-9933 </td>
+                        </tr>
+			<tr>
+                            <td> <span class="badge badge-nombref"> Lucía Méndez </td>
+			    <td> 03/03/1998 </td>
+                            <td> Femenino </td>
+			    <td> A- </td>
+                            <td> Sulfa </td>
+                            <td> 555-0707 </td>
+                            <td> lucy@mail.com </td>
+ 		            <td> MEJL980303 </td>
+                            <td> Pino 44 Int. 4 </td>
+			    <td> Marc M. (Esposo) 555-9922 </td>
+                        </tr>
+			<tr>
+                            <td> <span class="badge badge-nombreh"> Roberto Díaz </td>
+			    <td> 11/10/1970 </td>
+                            <td> Masculino </td>
+			    <td> O+  </td>
+                            <td> Metales </td>
+                            <td> 555-0808 </td>
+                            <td> rob@mail.com </td>
+ 		            <td> DISR701011 </td>
+                            <td> Morelos #500 </td>
+			    <td> Gaby S. 555-9911 </td>
+                        </tr>
+			<tr>
+                            <td> <span class="badge badge-nombref"> Karla Soto </td>
+			    <td> 25/12/2001 </td>
+                            <td> Femenino </td>
+			    <td> B+  </td>
+                            <td> AINES </td>
+                            <td> 555-0909 </td>
+                            <td> ksoto@mail.com </td>
+ 		            <td> SORK011225 </td>
+                            <td> Hidalgo #22 </td>
+			    <td> Jose S. (Padre) 555-9900 </td>
+                        </tr>
+			<tr>
+                            <td> <span class="badge badge-nombreh"> David Nova </td>
+			    <td> 08/06/1989 </td>
+                            <td> Masculino </td>
+			    <td> O+  </td>
+                            <td> Ninguna </td>
+                            <td> 555-1010 </td>
+                            <td> dnova@mail.com </td>
+ 		            <td> NOFD890608 </td>
+                            <td> Calle 8 #112 </td>
+			    <td> Leo N. (Hermano) 555-9899 </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer>
+    <p>©2026 <strong>Izquierdo Gaytan Alexander</strong> &nbsp;|&nbsp; 24308051280852 &nbsp;|&nbsp; 4°J &nbsp;|&nbsp; Programación</p>
+</footer>
+
+</body>
+</html>
