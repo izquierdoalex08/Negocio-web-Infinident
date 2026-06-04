@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinident – Caja y Pagos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue-dark:  #0d2b55;
+            --blue-mid:   #1a4a8a;
+            --blue:       #2563c4;
+            --blue-soft:  #4a90d9;
+            --blue-light: #b8d8f5;
+            --blue-pale:  #e8f2fb;
+            --white:      #ffffff;
+            --ink:        #0e1e35;
+            --muted:      #4a6080;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #f0f6fd;
+            color: var(--ink);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 55%, var(--blue-soft) 100%);
+            padding: 44px 40px 36px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 55% 70% at 85% 15%, rgba(74,144,217,.22) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 55% at 10% 85%, rgba(13,43,85,.35) 0%, transparent 55%);
+            pointer-events: none;
+        }
+        .header-inner {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        header img {
+            object-fit: contain;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,.3);
+            background: rgba(255,255,255,.1);
+            padding: 6px;
+        }
+        .header-text h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-weight: 700;
+            font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+            color: var(--white);
+            letter-spacing: .04em;
+            line-height: 1;
+        }
+        .header-text span {
+            display: block;
+            margin-top: 5px;
+            font-size: .75rem;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--blue-light);
+            font-weight: 300;
+        }
+        nav.menu-principal {
+            background: var(--blue-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+        nav.menu-principal ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0 12px;
+        }
+        nav.menu-principal a {
+            display: block;
+            padding: 13px 16px;
+            font-size: .8rem;
+            font-weight: 500;
+            letter-spacing: .09em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.75);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: color .2s, border-color .2s;
+        }
+        nav.menu-principal a:hover {
+            color: var(--blue-light);
+            border-bottom-color: var(--blue-soft);
+        }
+        .contenedor-principal { flex: 1; display: flex; flex-direction: column; }
+        main {
+            flex: 1;
+            padding: clamp(28px, 5vw, 56px) clamp(18px, 5vw, 72px);
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .card {
+            background: var(--white);
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--blue-light);
+            animation: fadeUp .45s ease both;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .card-header {
+            background: linear-gradient(90deg, var(--blue-dark), var(--blue-mid));
+            padding: 28px 36px 24px;
+        }
+        .card-header h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-size: clamp(1.4rem, 2.8vw, 2rem);
+            font-weight: 700;
+            color: var(--white);
+        }
+        .card-header p {
+            margin-top: 6px;
+            font-size: .85rem;
+            color: var(--blue-light);
+            letter-spacing: .04em;
+        }
+        .card-body { padding: 28px 36px 36px; overflow-x: auto; }
+        @media (max-width: 680px) {
+            .card-header { padding: 22px 20px; }
+            .card-body { padding: 18px 16px; }
+        }
+
+        /* ── TABLA ── */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .86rem;
+        }
+        thead th {
+            background: var(--blue-mid);
+            color: var(--white);
+            font-weight: 500;
+            font-size: .75rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: 13px 16px;
+            text-align: left;
+            white-space: nowrap;
+        }
+        thead th:first-child { border-radius: 6px 0 0 0; }
+        thead th:last-child  { border-radius: 0 6px 0 0; }
+        tbody tr { border-bottom: 1px solid var(--blue-pale); }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:nth-child(even) td { background: var(--blue-pale); }
+        tbody tr:hover td { background: #d4eaf8; }
+        td {
+            padding: 12px 16px;
+            color: var(--ink);
+            vertical-align: middle;
+        }
+        td:first-child {
+            font-weight: 600;
+            color: var(--blue-mid);
+            font-size: .8rem;
+            letter-spacing: .04em;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: .75rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .badge-lila { background: #f3e8ff; color: #7e22ce; }
+        .badge-efectivo { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
+        .badge-tarjeta { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+        .badge-transferencia { background: #ccfbf1; color: #0f766e; border: 1px solid #99f6e4; }
+        .badge-saldo-debido { background: #fee2e2; color: #b91c1c; font-weight: 600; }
+
+        footer {
+            background: var(--blue-dark);
+            border-top: 3px solid var(--blue-mid);
+            color: rgba(255,255,255,.55);
+            padding: 20px 40px;
+            text-align: center;
+            font-size: .76rem;
+            letter-spacing: .1em;
+        }
+        footer strong { color: var(--blue-light); font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-inner">
+            <img src="logonegocio.PNG" alt="Logo de Infinident" style="width: 120px; height: 120px;">
+            <div class="header-text">
+                <h1>Infinident</h1>
+                <span>Health &amp; Esthetics</span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="menu-principal">
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="odontologos.html">Odontólogos</a></li>
+            <li><a href="pacientes.html">Pacientes</a></li>
+            <li><a href="citas.html">Citas</a></li>
+            <li><a href="recetas.html">Recetas</a></li>
+            <li><a href="historial.html">Historial</a></li>
+            <li><a href="pagos.html">Pagos</a></li>
+            <li><a href="inventario.html">Inventario</a></li>
+        </ul>
+    </nav>
+
+    <div class="contenedor-principal">
+        <main>
+            <div class="card">
+                <div class="card-header">
+                    <h2>Gestión Financiera e Ingresos</h2>
+                    <p>Monitoreo de transacciones, cobros aplicados, métodos de pago electrónicos y estados de cuenta.</p>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Paciente</th>
+                                <th>Fecha Pago</th>
+                                <th>Monto Total</th>
+                                <th>Monto Abonado</th>
+                                <th>Saldo Restante</th>
+                                <th>Método de Pago</th>
+                                <th>Factura / Recibo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge badge-lila">Jorge Slim</span></td>
+                                <td>2026-02-09</td>
+                                <td>$800</td>
+                                <td>$800</td>
+                                <td>0</td>
+                                <td><span class="badge badge-efectivo">Efectivo</span></td>
+                                <td>REC-001</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-lila">Robeto Díaz</span></td>
+                                <td>2026-02-08</td>
+                                <td>$4500</td>
+                                <td>$3500</td>
+                                <td><span class="badge badge-saldo-debido">1000</span></td>
+                                <td><span class="badge badge-tarjeta">Tarjeta</span></td>
+                                <td>FAC-550</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-lila">Ana García</span></td>
+                                <td>2026-02-10</td>
+                                <td>$1200</td>
+                                <td>$1200</td>
+                                <td>0</td>
+                                <td><span class="badge badge-tarjeta">Tarjeta</span></td>
+                                <td>REC-002</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-lila">Carlos Ruiz</span></td>
+                                <td>2026-02-10</td>
+                                <td>$600</td>
+                                <td>$600</td>
+                                <td>0</td>
+                                <td><span class="badge badge-efectivo">Efectivo</span></td>
+                                <td>FAC-553</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-lila">Sofia Lara</span></td>
+                                <td>2026-02-11</td>
+                                <td>$1500</td>
+                                <td>$500</td>
+                                <td><span class="badge badge-saldo-debido">1000</span></td>
+                                <td><span class="badge badge-tarjeta">Tarjeta</span></td>
+                                <td>REC-004</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-lila">Miguel Paz</span></td>
+                                <td>2026-02-11</td>
+                                <td>$3500</td>
+                                <td>$3500</td>
+                                <td>0</td>
+                                <td><span class="badge badge-efectivo">Efectivo</span></td>
+                                <td>FAC-551</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-lila">Elena Torres</span></td>
+                                <td>2026-02-12</td>
+                                <td>$2800</td>
+                                <td>$1000</td>
+                                <td><span class="badge badge-saldo-debido">1800</span></td>
+                                <td><span class="badge badge-transferencia">Transferencia</span></td>
+                                <td>REC-055</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-lila">Lucía Méndez</span></td>
+                                <td>2026-02-12</td>
+                                <td>$500</td>
+                                <td>$500</td>
+                                <td>0</td>
+                                <td><span class="badge badge-efectivo">Efectivo</span></td>
+                                <td>REC-006</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-lila">Karla Soto</span></td>
+                                <td>2026-02-13</td>
+                                <td>$950</td>
+                                <td>$950</td>
+                                <td>0</td>
+                                <td><span class="badge badge-tarjeta">Tarjeta</span></td>
+                                <td>REC-007</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-lila">David Nova</span></td>
+                                <td>2026-02-13</td>
+                                <td>$700</td>
+                                <td>$700</td>
+                                <td>0</td>
+                                <td><span class="badge badge-efectivo">Efectivo</span></td>
+                                <td>FAC-552</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>©2026 <strong>Izquierdo Gaytan Alexander</strong> &nbsp;|&nbsp; 24308051280852 &nbsp;|&nbsp; 4°J &nbsp;|&nbsp; Programación</p>
+    </footer>
+
+</body>
+</html>
