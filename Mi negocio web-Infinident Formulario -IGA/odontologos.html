@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinident – Odontólogos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue-dark:  #0d2b55;
+            --blue-mid:   #1a4a8a;
+            --blue:       #2563c4;
+            --blue-soft:  #4a90d9;
+            --blue-light: #b8d8f5;
+            --blue-pale:  #e8f2fb;
+            --white:      #ffffff;
+            --ink:        #0e1e35;
+            --muted:      #4a6080;
+            --danger:     #d32f2f;
+            --warning:    #f57c00;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #f0f6fd;
+            color: var(--ink);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 55%, var(--blue-soft) 100%);
+            padding: 44px 40px 36px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 55% 70% at 85% 15%, rgba(74,144,217,.22) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 55% at 10% 85%, rgba(13,43,85,.35) 0%, transparent 55%);
+            pointer-events: none;
+        }
+        .header-inner {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        header img {
+            object-fit: contain;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,.3);
+            background: rgba(255,255,255,.1);
+            padding: 6px;
+        }
+        .header-text h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-weight: 700;
+            font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+            color: var(--white);
+            letter-spacing: .04em;
+            line-height: 1;
+        }
+        .header-text span {
+            display: block;
+            margin-top: 5px;
+            font-size: .75rem;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--blue-light);
+            font-weight: 300;
+        }
+        nav.menu-principal {
+            background: var(--blue-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+        nav.menu-principal ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0 12px;
+        }
+        nav.menu-principal a {
+            display: block;
+            padding: 13px 16px;
+            font-size: .8rem;
+            font-weight: 500;
+            letter-spacing: .09em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.75);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: color .2s, border-color .2s;
+        }
+        nav.menu-principal a:hover {
+            color: var(--blue-light);
+            border-bottom-color: var(--blue-soft);
+        }
+        .contenedor-principal { flex: 1; display: flex; flex-direction: column; }
+        main {
+            flex: 1;
+            padding: clamp(28px, 5vw, 56px) clamp(18px, 5vw, 72px);
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .card {
+            background: var(--white);
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--blue-light);
+            animation: fadeUp .45s ease both;
+            margin-bottom: 35px;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .card-header {
+            background: linear-gradient(90deg, var(--blue-dark), var(--blue-mid));
+            padding: 28px 36px 24px;
+        }
+        .card-header h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-size: clamp(1.4rem, 2.8vw, 2rem);
+            font-weight: 700;
+            color: var(--white);
+        }
+        .card-header p {
+            margin-top: 6px;
+            font-size: .85rem;
+            color: var(--blue-light);
+            letter-spacing: .04em;
+        }
+        .card-body { padding: 28px 36px 36px; }
+
+        /* Formulario */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .col-larga { grid-column: span 2; }
+        @media (max-width: 768px) { .col-larga { grid-column: span 1; } }
+
+        .form-group label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            color: var(--muted);
+            letter-spacing: 0.05em;
+        }
+        .form-control {
+            width: 100%;
+            padding: 11px 14px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            border: 1px solid var(--blue-light);
+            border-radius: 6px;
+            color: var(--ink);
+            background-color: var(--white);
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--blue);
+            background-color: #fcfdfe;
+        }
+
+        /* ── Botones ── */
+        .botones-container {
+            display: flex;
+            gap: 15px;
+            border-top: 1px solid var(--blue-pale);
+            padding-top: 22px;
+        }
+        .btn {
+            padding: 12px 26px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 0.08em;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary {
+            background: var(--blue);
+            color: var(--white);
+        }
+        .btn-primary:hover { background: var(--blue-mid); }
+        .btn-secondary {
+            background: var(--blue-pale);
+            color: var(--blue-mid);
+            border: 1px solid var(--blue-light);
+        }
+        .btn-secondary:hover { background: #d4eaf8; }
+
+        /* Barra de búsqueda */
+        .search-container {
+            margin-bottom: 22px;
+            display: flex;
+            gap: 10px;
+        }
+        .search-control {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            border: 1px solid var(--blue-light);
+            border-radius: 6px;
+            font-family: inherit;
+        }
+        .search-control:focus { outline: none; border-color: var(--blue); }
+
+        /* Tabla */
+        .table-responsive { overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .86rem;
+        }
+        thead th {
+            background: var(--blue-mid);
+            color: var(--white);
+            font-weight: 500;
+            font-size: .75rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: 13px 16px;
+            text-align: left;
+            white-space: nowrap;
+        }
+        thead th:first-child { border-radius: 6px 0 0 0; }
+        thead th:last-child  { border-radius: 0 6px 0 0; }
+        tbody tr { border-bottom: 1px solid var(--blue-pale); }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:nth-child(even) td { background: var(--blue-pale); }
+        tbody tr:hover td { background: #d4eaf8; }
+        td {
+            padding: 12px 16px;
+            color: var(--ink);
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        td:first-child { font-weight: 500; color: var(--blue-mid); }
+
+        /* Botones con acciones CRUD */
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+            color: white;
+            letter-spacing: 0.05em;
+        }
+        .btn-edit { background-color:   #9ec9ff ; }
+        .btn-edit:hover { background-color: #adabe8; }
+        .btn-delete { background-color: #e23c94; }
+        .btn-delete:hover { background-color: #f01e7d; }
+
+        footer {
+            background: var(--blue-dark);
+            border-top: 3px solid var(--blue-mid);
+            color: rgba(255,255,255,.55);
+            padding: 20px 40px;
+            text-align: center;
+            font-size: .76rem;
+            letter-spacing: .1em;
+        }
+        footer strong { color: var(--blue-light); font-weight: 500; }
+        
+        .oculto { display: none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <img src="logonegocio.PNG" alt="Logo de Infinident" style="width: 120px; height: 120px;">
+        <div class="header-text">
+            <h1>Infinident</h1>
+            <span>Health &amp; Esthetics</span>
+        </div>
+    </div>
+</header>
+
+<nav class="menu-principal">
+    <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="odontologos.html">Odontólogos</a></li>
+        <li><a href="pacientes.html">Pacientes</a></li>
+        <li><a href="citas.html">Citas</a></li>
+        <li><a href="recetas.html">Recetas</a></li>
+        <li><a href="historial.html">Historial</a></li>
+        <li><a href="pagos.html">Pagos</a></li>
+        <li><a href="inventario.html">Inventario</a></li>
+    </ul>
+</nav>
+
+<div class="contenedor-principal">
+    <main>
+        <div id="cardFormulario" class="card">
+            <div class="card-header">
+                <h2 id="tituloFormulario">Registro de Especialistas</h2>
+                <p id="subtituloFormulario">Ingrese los datos del odontólogo para incorporarlo al cuerpo médico de la clínica.</p>
+            </div>
+            <div class="card-body">
+                <form id="formOdontologos">
+                    <input type="hidden" id="editIndex" value="-1">
+
+                    <div class="form-grid">
+                        <div class="form-group col-larga">
+                            <label for="nombre">Nombre Completo</label>
+                            <input type="text" id="nombre" class="form-control" placeholder="Ej. Dr. Raul Méndez" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cedula">Cédula Profesional</label>
+                            <input type="text" id="cedula" class="form-control" placeholder="Ej. CED-000000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="especialidad">Especialidad</label>
+                            <input type="text" id="especialidad" class="form-control" placeholder="Ej. Endodoncia" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="consultorio">Consultorio</label>
+                            <input type="text" id="consultorio" class="form-control" placeholder="Ej. Unidad 01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" class="form-control" placeholder="Ej. 555-0000" required>
+                        </div>
+                        <div class="form-group col-larga">
+                            <label for="direccion">Dirección</label>
+                            <input type="text" id="direccion" class="form-control" placeholder="Ej. Calle Falsa #123" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rfc">RFC</label>
+                            <input type="text" id="rfc" class="form-control" placeholder="Ej. ABCD900101XYZ" required>
+                        </div>
+                    </div>
+                    <div class="botones-container">
+                        <button type="submit" id="btnGuardar" class="btn btn-primary">Guardar Especialista</button>
+                        <button type="button" id="btnCancelarEdicion" class="btn btn-secondary" style="display: none;">Cancelar Edición</button>
+                        <button type="button" id="btnVisualizar" class="btn btn-secondary">Visualizar Tabla</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="cardTabla" class="card oculto">
+            <div class="card-header">
+                <h2>Cuerpo Médico Activo</h2>
+                <p>Lista oficial, búsqueda y herramientas de edición de los especialistas.</p>
+            </div>
+            <div class="card-body">
+                
+                <div class="search-container">
+                    <input type="text" id="inputBuscar" class="search-control" placeholder="🔍 Buscar por nombre, especialidad o cédula...">
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre Completo</th>
+                                <th>Cédula Profesional</th>
+                                <th>Especialidad</th>
+                                <th>Consultorio</th>
+                                <th>Teléfono</th>
+                                <th>Dirección</th>
+                                <th>RFC</th>
+                                <th style="text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaBody">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div class="botones-container" style="margin-top: 20px;">
+                    <button type="button" id="btnRegresarForm" class="btn btn-secondary">← Volver al Formulario</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer>
+    <p>©2026 <strong>Izquierdo Gaytan Alexander</strong> &nbsp;|&nbsp; 24308051280852 &nbsp;|&nbsp; 4°J &nbsp;|&nbsp; Programación</p>
+</footer>
+
+<script>
+    // Datos guardados
+    const datosIniciales = [
+        { nombre: "Dr. Raul Méndez", cedula: "CED-998877", especialidad: "Odontología General", consultorio: "Unidad 04", telefono: "555-9001", direccion: "Av. Las Flores #12", rfc: "MENR750410HS1" },
+        { nombre: "Dra. Silvia Ortiz", cedula: "CED-889911", especialidad: "Endodoncia", consultorio: "Unidad 02", telefono: "555-9002", direccion: "Calle Roble #450", rfc: "ORTS820915GT2" },
+        { nombre: "Dr. Iván Ramos", cedula: "CED-445566", especialidad: "Ortodoncia", consultorio: "Unidad 03", telefono: "555-9003", direccion: "Paseo Central #88", rfc: "RAMI881201KJ3" },
+        { nombre: "Dra. Claudia Rey", cedula: "CED-778899", especialidad: "Odontopeditría", consultorio: "Unidad 04", telefono: "555-9004", direccion: "Av. Universidad #10", rfc: "REYC900520PL4" },
+        { nombre: "Dr. Mario Bosh", cedula: "CED-001122", especialidad: "Cirugía Maxilofacial", consultorio: "Quirofano A", telefono: "555-9005", direccion: "Col. Industrial #5", rfc: "BOSHM850311MUQ" },
+        { nombre: "Dra. Ana Soto", cedula: "CED-334455", especialidad: "Periodoncia", consultorio: "Unidad 03", telefono: "555-9006", direccion: "Calle 5 de Mayo #20", rfc: "SOTA800125BV6" },
+        { nombre: "Dr. Hugo Vega", cedula: "CED-667788", especialidad: "Rehabilitación Oral", consultorio: "Unidad 03", telefono: "555-9007", direccion: "Blv. Aeropuerto #33", rfc: "VEGH770714CX7" },
+        { nombre: "Dra. Laura Gil", cedula: "CED-990011", especialidad: "Odontología General", consultorio: "Unidad 01", telefono: "555-9008", direccion: "Av. Insurgentes #101", rfc: "GILL921130ZA8" },
+        { nombre: "Dr. Pedro Huang", cedula: "CED-223344", especialidad: "Endodoncia", consultorio: "Unidad 02", telefono: "555-9009", direccion: "Privada del Sol #7", rfc: "SOLP8406180W9" },
+        { nombre: "Dra. Monica Paz", cedula: "CED-556677", especialidad: "Ortodoncia", consultorio: "Unidad 03", telefono: "555-9010", direccion: "Calle Juárez #200", rfc: "PAZM891005ERO" }
+    ];
+
+    if (!localStorage.getItem('odontologos_datos')) {
+        localStorage.setItem('odontologos_datos', JSON.stringify(datosIniciales));
+    }
+
+    let listaOdontologos = JSON.parse(localStorage.getItem('odontologos_datos'));
+
+    const cardFormulario = document.getElementById('cardFormulario');
+    const cardTabla = document.getElementById('cardTabla');
+    const tbody = document.getElementById('tablaBody');
+    const inputBuscar = document.getElementById('inputBuscar');
+
+    function renderizarTabla(filtro = "") {
+        tbody.innerHTML = '';
+        listaOdontologos.forEach((doc, index) => {
+            // Verificar si cumple con la búsqueda
+            const cumpleFiltro = doc.nombre.toLowerCase().includes(filtro.toLowerCase()) ||
+                                 doc.especialidad.toLowerCase().includes(filtro.toLowerCase()) ||
+                                 doc.cedula.toLowerCase().includes(filtro.toLowerCase());
+            
+            if (!cumpleFiltro) return;
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${doc.nombre}</td>
+                <td>${doc.cedula}</td>
+                <td>${doc.especialidad}</td>
+                <td>${doc.consultorio}</td>
+                <td>${doc.telefono}</td>
+                <td>${doc.direccion}</td>
+                <td>${doc.rfc}</td>
+                <td style="text-align: center;">
+                    <button type="button" class="btn-action btn-edit" onclick="prepararEdicion(${index})">Editar</button>
+                    <button type="button" class="btn-action btn-delete" onclick="eliminarRegistro(${index})">Eliminar</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // Evento de búsqueda en tiempo real
+    inputBuscar.addEventListener('input', (e) => {
+        renderizarTabla(e.target.value);
+    });
+
+    document.getElementById('btnVisualizar').addEventListener('click', function() {
+        cardFormulario.classList.add('oculto');
+        cardTabla.classList.remove('oculto');
+        inputBuscar.value = ""; // Limpiar buscador
+        renderizarTabla();
+    });
+
+    document.getElementById('btnRegresarForm').addEventListener('click', function() {
+        cardTabla.classList.add('oculto');
+        cardFormulario.classList.remove('oculto');
+    });
+
+    // Guardar o actualizar 
+    document.getElementById('formOdontologos').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const index = parseInt(document.getElementById('editIndex').value);
+        const odontologoData = {
+            nombre: document.getElementById('nombre').value,
+            cedula: document.getElementById('cedula').value,
+            especialidad: document.getElementById('especialidad').value,
+            consultorio: document.getElementById('consultorio').value,
+            telefono: document.getElementById('telefono').value,
+            direccion: document.getElementById('direccion').value,
+            rfc: document.getElementById('rfc').value
+        };
+
+        if (index === -1) {
+            // Nuevo Registro
+            listaOdontologos.push(odontologoData);
+            alert('¡Odontólogo guardado correctamente!');
+        } else {
+            // Edición de Registro Existente
+            listaOdontologos[index] = odontologoData;
+            alert('¡Registro modificado exitosamente!');
+            restablecerFormulario();
+        }
+
+        localStorage.setItem('odontologos_datos', JSON.stringify(listaOdontologos));
+        this.reset();
+    });
+
+    // Acciones de elimnar y editar
+    window.eliminarRegistro = function(index) {
+        if (confirm(`¿Estás seguro de que deseas eliminar al especialista ${listaOdontologos[index].nombre}?`)) {
+            listaOdontologos.splice(index, 1);
+            localStorage.setItem('odontologos_datos', JSON.stringify(listaOdontologos));
+            renderizarTabla(inputBuscar.value);
+        }
+    };
+
+    window.prepararEdicion = function(index) {
+        const doc = listaOdontologos[index];
+        
+        // Colocar los datos en las cajas de texto
+        document.getElementById('editIndex').value = index;
+        document.getElementById('nombre').value = doc.nombre;
+        document.getElementById('cedula').value = doc.cedula;
+        document.getElementById('especialidad').value = doc.especialidad;
+        document.getElementById('consultorio').value = doc.consultorio;
+        document.getElementById('telefono').value = doc.telefono;
+        document.getElementById('direccion').value = doc.direccion;
+        document.getElementById('rfc').value = doc.rfc;
+
+        // Modificar textos de interfaz para modo edición
+        document.getElementById('tituloFormulario').innerText = "Editar Especialista";
+        document.getElementById('subtituloFormulario').innerText = "Modifique los campos correspondientes del odontólogo.";
+        document.getElementById('btnGuardar').innerText = "Actualizar Cambios";
+        document.getElementById('btnCancelarEdicion').style.display = "inline-block";
+
+        // Regresar al formulario automáticamente
+        cardTabla.classList.add('oculto');
+        cardFormulario.classList.remove('oculto');
+    };
+
+    document.getElementById('btnCancelarEdicion').addEventListener('click', restablecerFormulario);
+
+    function restablecerFormulario() {
+        document.getElementById('formOdontologos').reset();
+        document.getElementById('editIndex').value = "-1";
+        document.getElementById('tituloFormulario').innerText = "Registro de Especialistas";
+        document.getElementById('subtituloFormulario').innerText = "Ingrese los datos del odontólogo para incorporarlo al cuerpo médico de la clínica.";
+        document.getElementById('btnGuardar').innerText = "Guardar Especialista";
+        document.getElementById('btnCancelarEdicion').style.display = "none";
+    }
+</script>
+</body>
+</html>
