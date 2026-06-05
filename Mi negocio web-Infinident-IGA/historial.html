@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinident – Historial Clínico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue-dark:  #0d2b55;
+            --blue-mid:   #1a4a8a;
+            --blue:       #2563c4;
+            --blue-soft:  #4a90d9;
+            --blue-light: #b8d8f5;
+            --blue-pale:  #e8f2fb;
+            --white:      #ffffff;
+            --ink:        #0e1e35;
+            --muted:      #4a6080;
+            --danger:     #d32f2f;
+            --warning:    #f57c00;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #f0f6fd;
+            color: var(--ink);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 55%, var(--blue-soft) 100%);
+            padding: 44px 40px 36px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 55% 70% at 85% 15%, rgba(74,144,217,.22) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 55% at 10% 85%, rgba(13,43,85,.35) 0%, transparent 55%);
+            pointer-events: none;
+        }
+        .header-inner {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        header img {
+            object-fit: contain;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,.3);
+            background: rgba(255,255,255,.1);
+            padding: 6px;
+        }
+        .header-text h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-weight: 700;
+            font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+            color: var(--white);
+            letter-spacing: .04em;
+            line-height: 1;
+        }
+        .header-text span {
+            display: block;
+            margin-top: 5px;
+            font-size: .75rem;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--blue-light);
+            font-weight: 300;
+        }
+        nav.menu-principal {
+            background: var(--blue-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+        nav.menu-principal ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0 12px;
+        }
+        nav.menu-principal a {
+            display: block;
+            padding: 13px 16px;
+            font-size: .8rem;
+            font-weight: 500;
+            letter-spacing: .09em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.75);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: color .2s, border-color .2s;
+        }
+        nav.menu-principal a:hover {
+            color: var(--blue-light);
+            border-bottom-color: var(--blue-soft);
+        }
+        .contenedor-principal { flex: 1; display: flex; flex-direction: column; }
+        main {
+            flex: 1;
+            padding: clamp(28px, 5vw, 56px) clamp(18px, 5vw, 72px);
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .card {
+            background: var(--white);
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--blue-light);
+            animation: fadeUp .45s ease both;
+            margin-bottom: 30px;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .card-header {
+            background: linear-gradient(90deg, var(--blue-dark), var(--blue-mid));
+            padding: 28px 36px 24px;
+        }
+        .card-header h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-size: clamp(1.4rem, 2.8vw, 2rem);
+            font-weight: 700;
+            color: var(--white);
+        }
+        .card-header p {
+            margin-top: 6px;
+            font-size: .85rem;
+            color: var(--blue-light);
+            letter-spacing: .04em;
+        }
+        .card-body { padding: 28px 36px 36px; }
+        @media (max-width: 680px) {
+            .card-header { padding: 22px 20px; }
+            .card-body { padding: 18px 16px; }
+        }
+
+        /* Formulario */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .col-larga { grid-column: span 2; }
+        @media (max-width: 768px) { .col-larga { grid-column: span 1; } }
+
+        .form-group label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            color: var(--muted);
+            letter-spacing: 0.05em;
+        }
+        .form-control {
+            width: 100%;
+            padding: 11px 14px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            border: 1px solid var(--blue-light);
+            border-radius: 6px;
+            color: var(--ink);
+            background-color: var(--white);
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--blue);
+            background-color: #fcfdfe;
+        }
+        .botones-container {
+            display: flex;
+            gap: 15px;
+            border-top: 1px solid var(--blue-pale);
+            padding-top: 22px;
+        }
+        .btn {
+            padding: 12px 26px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 0.08em;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary {
+            background: var(--blue);
+            color: var(--white);
+        }
+        .btn-primary:hover { background: var(--blue-mid); }
+        .btn-secondary {
+            background: var(--blue-pale);
+            color: var(--blue-mid);
+            border: 1px solid var(--blue-light);
+        }
+        .btn-secondary:hover { background: #d4eaf8; }
+
+        /* Buscador */
+        .search-container {
+            margin-bottom: 22px;
+            display: flex;
+            gap: 10px;
+        }
+        .search-control {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            border: 1px solid var(--blue-light);
+            border-radius: 6px;
+            font-family: inherit;
+        }
+        .search-control:focus { outline: none; border-color: var(--blue); }
+
+        /* Tabla */
+        .table-responsive { overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .86rem;
+        }
+        thead th {
+            background: var(--blue-mid);
+            color: var(--white);
+            font-weight: 500;
+            font-size: .75rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: 13px 16px;
+            text-align: left;
+            white-space: nowrap;
+        }
+        thead th:first-child { border-radius: 6px 0 0 0; }
+        thead th:last-child  { border-radius: 0 6px 0 0; }
+        tbody tr { border-bottom: 1px solid var(--blue-pale); }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:nth-child(even) td { background: var(--blue-pale); }
+        tbody tr:hover td { background: #d4eaf8; }
+        td {
+            padding: 12px 16px;
+            color: var(--ink);
+            vertical-align: middle;
+        }
+        td:first-child {
+            font-weight: 600;
+            color: var(--blue-mid);
+            font-size: .8rem;
+            letter-spacing: .04em;
+            white-space: nowrap;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: .75rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .badge-receta { background: var(--blue-pale); color: var(--blue-mid); }
+        .badge-rx { background: #ffedd5; color: #ea580c; text-decoration: underline; cursor: pointer; }
+        .badge-no { background: #fde8e8; color: #9b1c1c; text-decoration: underline; }
+
+        /* Acciones */
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+            color: white;
+            letter-spacing: 0.05em;
+        }
+        .btn-edit { background-color: #9ec9ff; }
+        .btn-edit:hover { background-color: #adabe8; }
+        .btn-delete { background-color: #e23c94; }
+        .btn-delete:hover { background-color: #f01e7d; }
+
+        footer {
+            background: var(--blue-dark);
+            border-top: 3px solid var(--blue-mid);
+            color: rgba(255,255,255,.55);
+            padding: 20px 40px;
+            text-align: center;
+            font-size: .76rem;
+            letter-spacing: .1em;
+        }
+        footer strong { color: var(--blue-light); font-weight: 500; }
+
+        .oculto { display: none; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-inner">
+            <img src="logonegocio.PNG" alt="Logo de Infinident" style="width: 120px; height: 120px;">
+            <div class="header-text">
+                <h1>Infinident</h1>
+                <span>Health &amp; Esthetics</span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="menu-principal">
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="odontologos.html">Odontólogos</a></li>
+            <li><a href="pacientes.html">Pacientes</a></li>
+            <li><a href="citas.html">Citas</a></li>
+            <li><a href="recetas.html">Recetas</a></li>
+            <li><a href="historial.html">Historial</a></li>
+            <li><a href="pagos.html">Pagos</a></li>
+            <li><a href="inventario.html">Inventario</a></li>
+        </ul>
+    </nav>
+
+    <div class="contenedor-principal">
+        <main>
+            <div id="cardFormulario" class="card">
+                <div class="card-header">
+                    <h2 id="tituloFormulario">Consultas e Historial Clínico</h2>
+                    <p id="subtituloFormulario">Expediente y registro detallado de diagnósticos, evoluciones y tratamientos aplicados.</p>
+                </div>
+                <div class="card-body">
+                    <form id="formHistorial">
+                        <input type="hidden" id="editIndex" value="-1">
+
+                        <div class="form-grid">
+                            <div class="form-group col-larga">
+                                <label for="paciente">Nombre del Paciente</label>
+                                <input type="text" id="paciente" class="form-control" placeholder="Ej. Jorge Slim" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="dientes">Número de Dientes</label>
+                                <input type="text" id="dientes" class="form-control" placeholder="Ej. 16, 26 o 'Todos'" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="superficie">Superficie Dental</label>
+                                <input type="text" id="superficie" class="form-control" placeholder="Ej. Oclusal / Distal / General" required>
+                            </div>
+                            <div class="form-group col-larga">
+                                <label for="hallazgos">Hallazgos Clínicos / Diagnóstico</label>
+                                <input type="text" id="hallazgos" class="form-control" placeholder="Ej. Caries Grado 2 / Pulpa expuesta" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="procedimiento">Procedimiento Realizado</label>
+                                <input type="text" id="procedimiento" class="form-control" placeholder="Ej. Resina / Amalgama" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="radiografia">Link de la Radiografía</label>
+                                <input type="text" id="radiografia" class="form-control" placeholder="Ej. rx.com/001 (Si no aplica, escriba 'Ninguno')" required>
+                            </div>
+                        </div>
+
+                        <div class="botones-container">
+                            <button type="submit" id="btnGuardar" class="btn btn-primary">Guardar en Historial</button>
+                            <button type="button" id="btnCancelarEdicion" class="btn btn-secondary" style="display: none;">Cancelar Edición</button>
+                            <button type="button" id="btnVisualizar" class="btn btn-secondary">Ver Expedientes Clínicos</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="cardTabla" class="card oculto">
+                <div class="card-header">
+                    <h2>Expedientes Clínicos Registrados</h2>
+                    <p>Módulo de consulta rápida de diagnósticos, piezas intervenidas y soportes radiográficos.</p>
+                </div>
+                <div class="card-body">
+                    
+                    <div class="search-container">
+                        <input type="text" id="inputBuscar" class="search-control" placeholder="🔍 Buscar por paciente, hallazgos, diagnóstico o procedimiento realizado...">
+                    </div>
+
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nombre del paciente</th>
+                                    <th>Número de dientes</th>
+                                    <th>Superficie</th>
+                                    <th>Hallazgos</th>
+                                    <th>Procedimiento</th>
+                                    <th>Link de la radiografía</th>
+                                    <th style="text-align: center;">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaBody">
+                                </tbody>
+                        </table>
+                    </div>
+
+                    <div class="botones-container" style="border-top: none; margin-top: 20px; padding-top: 0;">
+                        <button type="button" id="btnVolver" class="btn btn-secondary">← Volver al Formulario</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>©2026 <strong>Izquierdo Gaytan Alexander</strong> &nbsp;|&nbsp; 24308051280852 &nbsp;|&nbsp; 4°J &nbsp;|&nbsp; Programación</p>
+    </footer>
+
+<script>
+    // Datos anteriores
+    const datosIniciales = [
+        { paciente: "Jorge Slim", dientes: "16, 26", superficie: "Oclusal", hallazgos: "Caries Grado 2", procedimiento: "Resina", radiografia: "rx.com/001" },
+        { paciente: "Roberto Díaz", dientes: "46", superficie: "Completa", hallazgos: "Corona fracturada", procedimiento: "Preparación corona", radiografia: "rx.com/002" },
+        { paciente: "Carlos Ruiz M.", dientes: "36, 37", superficie: "Surcos", hallazgos: "Surcos profundos", procedimiento: "Selladores", radiografia: "Ninguno" },
+        { paciente: "Ana García", dientes: "11", superficie: "Incisal", hallazgos: "Fractura estética", procedimiento: "Carilla Resina y limpieza", radiografia: "rx.com/003" },
+        { paciente: "Sofia Lara", dientes: "21, 22", superficie: "Vestibular", hallazgos: "Sarro subgingival", procedimiento: "Raspado y alisado", radiografia: "rx.com/004" },
+        { paciente: "Miguel Paz", dientes: "18", superficie: "General", hallazgos: "Impactación", procedimiento: "Cirugía Extracción", radiografia: "rx.com/005" },
+        { paciente: "Elena Torres", dientes: "24", superficie: "Oclusal", hallazgos: "Pulpitis irreversible", procedimiento: "Acceso endodontico", radiografia: "rx.com/006" },
+        { paciente: "Lucía Méndez", dientes: "Todos", superficie: "General", hallazgos: "Manchas extrínsecas", procedimiento: "Profilaxis", radiografia: "Ninguno" },
+        { paciente: "Karla Soto", dientes: "47", superficie: "Distal", hallazgos: "Caries Distal", procedimiento: "Amalgama", radiografia: "rx.com/008" },
+        { paciente: "David Nova", dientes: "15", superficie: "Cervical", hallazgos: "Erosión ácida", procedimiento: "Reconstrucción", radiografia: "Ninguno" }
+    ];
+
+    if (!localStorage.getItem('historial_datos')) {
+        localStorage.setItem('historial_datos', JSON.stringify(datosIniciales));
+    }
+
+    let listaHistorial = JSON.parse(localStorage.getItem('historial_datos'));
+
+    // Componentes 
+    const cardFormulario = document.getElementById('cardFormulario');
+    const cardTabla = document.getElementById('cardTabla');
+    const formHistorial = document.getElementById('formHistorial');
+    const tablaBody = document.getElementById('tablaBody');
+    const inputBuscar = document.getElementById('inputBuscar');
+    const btnVisualizar = document.getElementById('btnVisualizar');
+    const btnVolver = document.getElementById('btnVolver');
+
+    function cargarTabla(filtro = "") {
+        tablaBody.innerHTML = '';
+
+        listaHistorial.forEach((item, index) => {
+            const coincide = item.paciente.toLowerCase().includes(filtro.toLowerCase()) ||
+                             item.hallazgos.toLowerCase().includes(filtro.toLowerCase()) ||
+                             item.procedimiento.toLowerCase().includes(filtro.toLowerCase());
+
+            if (!coincide) return;
+
+            const tr = document.createElement('tr');
+
+            // Formatear celda de Radiografía según el estándar original
+            let rxCelda = '';
+            if (item.radiografia.toLowerCase() === 'ninguno') {
+                rxCelda = `<span class="badge badge-no">Ninguno</span>`;
+            } else {
+                rxCelda = `<span class="badge badge-rx" onclick="window.open('#','_blank')">${item.radiografia}</span>`;
+            }
+
+            tr.innerHTML = `
+                <td><span class="badge badge-receta">${item.paciente}</span></td>
+                <td>${item.dientes}</td>
+                <td>${item.superficie}</td>
+                <td>${item.hallazgos}</td>
+                <td>${item.procedimiento}</td>
+                <td>${rxCelda}</td>
+                <td style="text-align: center; white-space: nowrap;">
+                    <button type="button" class="btn-action btn-edit" onclick="prepararEdicion(${index})">Editar</button>
+                    <button type="button" class="btn-action btn-delete" onclick="eliminarRegistro(${index})">Eliminar</button>
+                </td>
+            `;
+            tablaBody.appendChild(tr);
+        });
+    }
+
+    inputBuscar.addEventListener('input', (e) => cargarTabla(e.target.value));
+
+    // Control de intercambio de vistas
+    btnVisualizar.addEventListener('click', function() {
+        inputBuscar.value = "";
+        cargarTabla();
+        cardFormulario.classList.add('oculto');
+        cardTabla.classList.remove('oculto');
+    });
+
+    btnVolver.addEventListener('click', function() {
+        cardTabla.classList.add('oculto');
+        cardFormulario.classList.remove('oculto');
+    });
+
+    // Envio de datos al crear y actualizar
+    formHistorial.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const index = parseInt(document.getElementById('editIndex').value);
+
+        const registroClinico = {
+            paciente: document.getElementById('paciente').value.trim(),
+            dientes: document.getElementById('dientes').value.trim(),
+            superficie: document.getElementById('superficie').value.trim(),
+            hallazgos: document.getElementById('hallazgos').value.trim(),
+            procedimiento: document.getElementById('procedimiento').value.trim(),
+            radiografia: document.getElementById('radiografia').value.trim()
+        };
+
+        if (index === -1) {
+            listaHistorial.push(registroClinico);
+            alert('¡El expediente clínico del paciente ha sido añadido con éxito!');
+        } else {
+            listaHistorial[index] = registroClinico;
+            alert('¡El historial clínico seleccionado ha sido modificado correctamente!');
+            restablecerFormulario();
+        }
+
+        localStorage.setItem('historial_datos', JSON.stringify(listaHistorial));
+        this.reset();
+    });
+
+    // Operaciones de eliminar y editar
+    window.eliminarRegistro = function(index) {
+        if (confirm(`¿Desea eliminar definitivamente el registro clínico de ${listaHistorial[index].paciente}?`)) {
+            listaHistorial.splice(index, 1);
+            localStorage.setItem('historial_datos', JSON.stringify(listaHistorial));
+            cargarTabla(inputBuscar.value);
+        }
+    };
+
+    window.prepararEdicion = function(index) {
+        const item = listaHistorial[index];
+
+        document.getElementById('editIndex').value = index;
+        document.getElementById('paciente').value = item.paciente;
+        document.getElementById('dientes').value = item.dientes;
+        document.getElementById('superficie').value = item.superficie;
+        document.getElementById('hallazgos').value = item.hallazgos;
+        document.getElementById('procedimiento').value = item.procedimiento;
+        document.getElementById('radiografia').value = item.radiografia;
+
+        document.getElementById('tituloFormulario').innerText = "Modificar Expediente Clínico";
+        document.getElementById('subtituloFormulario').innerText = "Modifique las piezas dentales, hallazgos, tipo de intervención o el soporte radiográfico correspondiente.";
+        document.getElementById('btnGuardar').innerText = "Actualizar Registro";
+        document.getElementById('btnCancelarEdicion').style.display = "inline-block";
+
+        cardTabla.classList.add('oculto');
+        cardFormulario.classList.remove('oculto');
+    };
+
+    document.getElementById('btnCancelarEdicion').addEventListener('click', restablecerFormulario);
+
+    function restablecerFormulario() {
+        formHistorial.reset();
+        document.getElementById('editIndex').value = "-1";
+        document.getElementById('tituloFormulario').innerText = "Consultas e Historial Clínico";
+        document.getElementById('subtituloFormulario').innerText = "Expediente y registro detallado de diagnósticos, evoluciones y tratamientos aplicados.";
+        document.getElementById('btnGuardar').innerText = "Guardar en Historial";
+        document.getElementById('btnCancelarEdicion').style.display = "none";
+    }
+</script>
+</body>
+</html>
