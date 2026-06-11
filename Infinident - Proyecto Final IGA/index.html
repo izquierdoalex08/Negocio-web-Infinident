@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinident – Health & Esthetics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Variables globales de color, se usan en todo el CSS */
+        :root {
+            --blue-dark:  #0d2b55;
+            --blue-mid:   #1a4a8a;
+            --blue:       #2563c4;
+            --blue-soft:  #4a90d9;
+            --blue-light: #b8d8f5;
+            --blue-pale:  #e8f2fb;
+            --white:      #ffffff;
+            --ink:        #0e1e35;
+            --muted:      #4a6080;
+        }
+        /* Reseteo general: quita márgenes y rellenos por defecto del navegador */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #f0f6fd;
+            color: var(--ink);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Encabezado */
+        header {
+            background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 55%, var(--blue-soft) 100%);
+            padding: 44px 40px 36px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 55% 70% at 85% 15%, rgba(74,144,217,.22) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 55% at 10% 85%, rgba(13,43,85,.35) 0%, transparent 55%);
+            pointer-events: none;
+        }
+        /* Contenedor interior del enbaezado: logo y texto centrados */
+        .header-inner {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        /* Logo con borde semitransparente */
+        header img {
+            object-fit: contain;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,.3);
+            background: rgba(255,255,255,.1);
+            padding: 6px;
+        }
+        /* Título principal con tamaño adaptable a la pantalla */
+        .header-text h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-weight: 700;
+            font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+            color: var(--white);
+            letter-spacing: .04em;
+            line-height: 1;
+        }
+        /* Eslogan debajo del título */
+        .header-text span {
+            display: block;
+            margin-top: 5px;
+            font-size: .75rem;
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            color: var(--blue-light);
+            font-weight: 300;
+        }
+
+       /* Barra de navegación */
+        nav.menu-principal {
+            background: var(--blue-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+        /* Links del menú centrados y en fila */
+        nav.menu-principal ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0 12px;
+        }
+        /* Estilo base de cada link del menú */
+        nav.menu-principal a {
+            display: block;
+            padding: 13px 16px;
+            font-size: .8rem;
+            font-weight: 500;
+            letter-spacing: .09em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.75);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: color .2s, border-color .2s;
+        }
+        /* Link activo se ilumina y aparece línea abajo */
+        nav.menu-principal a:hover,
+        nav.menu-principal a.activo {
+        color: var(--blue-light);
+        border-bottom-color: var(--blue-soft);
+        }
+        /* Todas las secciones ocultas por defecto */
+        .seccion { display: none; }
+         /* Solo la sección con clase activa se muestra */
+        .seccion.activa { display: block; }
+
+        .contenedor-principal { flex: 1; display: flex; flex-direction: column; }
+
+        /* Área principal de contenido */
+        main {
+            flex: 1;
+            padding: clamp(28px, 5vw, 56px) clamp(18px, 5vw, 72px);
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+        }
+        /* Tarjeta con bordes redondeados y animación de entrada */
+        .card {
+            background: var(--white);
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--blue-light);
+            animation: fadeUp .45s ease both;
+            margin-bottom: 30px;
+        }
+         /* Animación: la tarjeta sube desde abajo y aparece */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        /* Encabezado de cada tarjeta con título y subtítulo */
+        .card-header {
+            background: linear-gradient(90deg, var(--blue-dark), var(--blue-mid));
+            padding: 28px 36px 24px;
+        }
+        /* Título del encabezado de la tarjeta */
+        .card-header h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-size: clamp(1.4rem, 2.8vw, 2rem);
+            font-weight: 700;
+            color: var(--white);
+        }
+        /* Subtítulo del encabezado de la tarjeta */
+        .card-header p {
+            margin-top: 6px;
+            font-size: .85rem;
+            color: var(--blue-light);
+            letter-spacing: .04em;
+        }
+        /* Cuerpo de la tarjeta donde va el formulario o tabla */
+        .card-body { padding: 32px 36px; }
+        /* En pantallas pequeñas se reduce el padding */
+        @media (max-width: 680px) {
+            .card-header { padding: 22px 20px; }
+            .card-body { padding: 18px 16px; }
+        }
+
+        /* Página de incio (horarios y servicios)*/
+        .inicio-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 36px;
+        }
+        @media (max-width: 768px) { .inicio-grid { grid-template-columns: 1fr; } }
+        /* Etiqueta de sección: Horarios de atención y Servicios */
+        .section-label {
+            font-size: .7rem;
+            font-weight: 500;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: var(--blue-mid);
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--blue-pale);
+        }
+        /* Fila de horario: día a la izquierda, hora a la derecha */
+        .horario-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed #d4e6f7;
+            font-size: .88rem;
+        }
+        .horario-row:last-child { border-bottom: none; }
+        .horario-dia { font-weight: 500; }
+        .horario-hora { color: var(--muted); font-size: .82rem; }
+        /* Sombra que muestra "Cerrado" en domingos */
+        .badge-cerrado {
+            font-size: .72rem;
+            background: #dbeafe;
+            color: var(--blue-mid);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        /* Lista de servicios destacados en la página de inicio */
+        .servicios-grid {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        /* Cada servicio con fondo azul claro con borde izquierdo de color */
+        .servicios-grid li {
+            background: var(--blue-pale);
+            border-radius: 8px;
+            padding: 14px 16px;
+            border-left: 3px solid var(--blue-soft);
+            transition: background .2s;
+        }
+        .servicios-grid li:hover { background: #d0e8f8; }
+        .s-nombre { display: block; font-weight: 500; font-size: .88rem; color: var(--blue-dark); margin-bottom: 2px; }
+        .s-desc { display: block; font-size: .8rem; color: var(--muted); }
+
+        /* Encabezado del collage de la página de incio */
+        .header-instalaciones {
+            background: linear-gradient(135deg, #3669b1 0%, #1b447e 45%, #0d2b55 100%);
+            padding: 28px 36px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header-instalaciones::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 80% at 90% 20%, rgba(255,255,255,.30) 0%, transparent 65%),
+                radial-gradient(ellipse 45% 60% at 5% 90%, rgba(91,163,217,.25) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .header-instalaciones h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-size: clamp(1.4rem, 2.8vw, 2rem);
+            font-weight: 700;
+            color: var(--white);
+            position: relative;
+        }
+        .header-instalaciones p {
+            margin-top: 6px;
+            font-size: .85rem;
+            color: var(--blue-light);
+            letter-spacing: .04em;
+            position: relative;
+        }
+        /* Posiciones de las imagenes del collage: imagen grande a la izquierda, 4 pequeñas a la derecha */
+        .collage-container {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            grid-template-rows: 240px 240px;
+            gap: 0;
+            background: var(--blue-dark);
+        }
+        .collage-img {
+            width: 100%; height: 100%;
+            object-fit: cover; display: block;
+            border: 4px solid var(--blue-dark);
+            transition: transform .3s ease, filter .3s ease;
+        }
+        /* Al pasar el mouse la imagen se agranda un poco */
+        .collage-img:hover { transform: scale(1.02); z-index: 10; filter: brightness(1.05); }
+        /* Imagen grande que ocupa las dos filas del collage */
+        .img-grande { grid-row: span 2; }
+        @media (max-width: 768px) {
+            .collage-container { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+            .img-grande { grid-column: span 2; grid-row: span 1; height: 250px; }
+            .collage-img { height: 150px; }
+        }
+
+        /* Formularios */
+        /* Espacio adaptable para los campos del formulario */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        /* Campo que ocupa el doble de columnas (ej: nombre completo, dirección) */
+        .col-larga { grid-column: span 2; }
+        @media (max-width: 768px) { .col-larga { grid-column: span 1; } }
+        /* Etiqueta de cada campo del formulario */
+        .form-group label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            color: var(--muted);
+            letter-spacing: 0.05em;
+        }
+        /* Forma y diseño de las cajas de los campos del formulario */
+        .form-control {
+            width: 100%;
+            padding: 11px 14px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            border: 1px solid var(--blue-light);
+            border-radius: 6px;
+            color: var(--ink);
+            background-color: var(--white);
+            transition: border-color 0.2s;
+        }
+        /* Al enfocar un campo, el borde se vuelve azul más intenso */
+        .form-control:focus { outline: none; border-color: var(--blue); background-color: #fcfdfe; }
+
+        /* ── Botones ── */
+
+        /* Contenedor de botones con una línea separadora arriba */
+        .botones-container {
+            display: flex;
+            gap: 15px;
+            border-top: 1px solid var(--blue-pale);
+            padding-top: 22px;
+            flex-wrap: wrap;
+        }
+        /* Estilo base de todos los botones */
+        .btn {
+            padding: 12px 26px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 0.08em;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        /* Pequeño efecto al presionar */
+        .btn:active { transform: scale(0.98); }
+        /* Botón principal azul (guardar, agendar, etc.) */
+        .btn-primary { background: var(--blue); color: var(--white); }
+        .btn-primary:hover { background: var(--blue-mid); }
+        /* Botón secundario claro (cancelar, volver, visualizar) */
+        .btn-secondary { background: var(--blue-pale); color: var(--blue-mid); border: 1px solid var(--blue-light); }
+        .btn-secondary:hover { background: #d4eaf8; }
+
+        /* Buscador */
+        .search-container { margin-bottom: 22px; }
+        .search-control {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            border: 1px solid var(--blue-light);
+            border-radius: 6px;
+            font-family: inherit;
+        }
+        .search-control:focus { outline: none; border-color: var(--blue); }
+
+        /* Tablas */
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+        /* Encabezado de la tabla con fondo azul con letras blancas */
+        thead th {
+            background: var(--blue-mid);
+            color: var(--white);
+            font-weight: 500;
+            font-size: .75rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            padding: 13px 16px;
+            text-align: left;
+            white-space: nowrap;
+        }
+        /* Esquinas redondeadas en la primera y última columna del encabezado */
+        thead th:first-child { border-radius: 6px 0 0 0; }
+        thead th:last-child  { border-radius: 0 6px 0 0; }
+        /* Filas con separador y efecto de dos colores (filas pares con fondo azul claro) */
+        tbody tr { border-bottom: 1px solid var(--blue-pale); }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:nth-child(even) td { background: var(--blue-pale); }
+        tbody tr:hover td { background: #d4eaf8; }
+        td { padding: 12px 16px; color: var(--ink); vertical-align: middle; white-space: nowrap; }
+
+        /* Botones de acción (editar y eliminar) */
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+            color: white;
+        }
+        .btn-edit { background-color: #9ec9ff; }
+        .btn-edit:hover { background-color: #adabe8; }
+        .btn-delete { background-color: #e23c94; }
+        .btn-delete:hover { background-color: #f01e7d; }
+
+        /* Badges */
+        /* Pastillas de colores para mostrar estados o categorías */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: .75rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .badge-nombref    { background: #fce4ec; color: #c2185b; }
+        .badge-nombreh    { background: #e3f2fd; color: #0d47a1; }
+        .badge-paciente   { background: #e2e8f0; color: #4a5568; }
+        .badge-success    { background: #def7ec; color: #03543f; }
+        .badge-warning    { background: #fef3c7; color: #92400e; }
+        .badge-danger     { background: #fde8e8; color: #9b1c1c; }
+        .badge-receta     { background: #ccffcc; color: #003300; }
+        .badge-no         { background: #fde8e8; color: #9b1c1c; }
+        .badge-si         { background: #ccffff; color: #009999; }
+        .badge-rx         { background: #ffedd5; color: #ea580c; text-decoration: underline; cursor: pointer; }
+        .badge-historial  { background: var(--blue-pale); color: var(--blue-mid); }
+        .badge-lila       { background: #f3e8ff; color: #7e22ce; }
+        .badge-efectivo   { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
+        .badge-tarjeta    { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+        .badge-transferencia { background: #ccfbf1; color: #0f766e; border: 1px solid #99f6e4; }
+        .badge-saldo-debe { background: #fee2e2; color: #b91c1c; font-weight: 600; }
+        .badge-insumo     { background: #dbeafe; color: #1e40af; }
+        .badge-stock-crit { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+        /* Oculta cualquier elemento completamente */
+        .oculto { display: none !important; }
+       
+        /* Pie de página */
+        footer {
+            background: var(--blue-dark);
+            border-top: 3px solid var(--blue-mid);
+            color: rgba(255,255,255,.55);
+            padding: 20px 40px;
+            font-size: .76rem;
+            letter-spacing: .1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        footer strong { color: var(--blue-light); font-weight: 500; }
+        .footer-diente { width: 40px; height: 40px; object-fit: contain; opacity: 0.8; }
+        @media (max-width: 600px) { footer { flex-direction: column; gap: 8px; padding: 20px; } }
+    </style>
+</head>
+<body>
+
+<!-- Encabezado con logo y nombre del negocio -->
+<header>
+    <div class="header-inner">
+        <img src="logonegocio.png" alt="Logo de Infinident" style="width:120px;height:120px;">
+        <div class="header-text">
+            <h1>Infinident</h1>
+            <span>Health &amp; Esthetics</span>
+        </div>
+    </div>
+</header>
+<!-- Menú de navegación, indica qué sección mostrar -->
+<nav class="menu-principal">
+    <ul>
+        <li><a href="#" data-sec="inicio"       class="nav-link activo">Inicio</a></li>
+        <li><a href="#" data-sec="odontologos"  class="nav-link">Odontólogos</a></li>
+        <li><a href="#" data-sec="pacientes"    class="nav-link">Pacientes</a></li>
+        <li><a href="#" data-sec="citas"        class="nav-link">Citas</a></li>
+        <li><a href="#" data-sec="recetas"      class="nav-link">Recetas</a></li>
+        <li><a href="#" data-sec="historial"    class="nav-link">Historial</a></li>
+        <li><a href="#" data-sec="pagos"        class="nav-link">Pagos</a></li>
+        <li><a href="#" data-sec="inventario"   class="nav-link">Inventario</a></li>
+    </ul>
+</nav>
+
+<div class="contenedor-principal">
+<main>
+
+<!--  Sección de inicio   -->
+<section id="sec-inicio" class="seccion activa">
+    <div class="card">
+        <div class="card-header">
+            <h2>Bienvenid@ a Infinident</h2>
+            <p>El sitio web del consultorio dental.</p>
+        </div>
+        <div class="card-body">
+            <div class="inicio-grid">
+                <div>
+                    <p class="section-label">Horarios de atención</p>
+                    <!-- Cada fila muestra el día y su horario -->
+                    <div class="horario-row"><span class="horario-dia">Lunes – Viernes</span><span class="horario-hora">09:00 – 20:00</span></div>
+                    <div class="horario-row"><span class="horario-dia">Sábados</span><span class="horario-hora">10:00 – 14:00</span></div>
+                    <div class="horario-row"><span class="horario-dia">Domingos</span><span class="badge-cerrado">Cerrado</span></div>
+                    <!-- Sección de contacto debajo de los horarios -->
+                    <div style="margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--blue-pale);">
+                        <!-- Título de contacto -->
+                        <p style="
+                            font-family: 'Playfair Display', Georgia, serif;
+                            font-style: italic;
+                            font-weight: 700;
+                            font-size: 1rem;
+                            color: var(--blue-mid);
+                            margin-bottom: 14px;
+                            letter-spacing: .02em;
+                        ">Contacto</p>
+                         <!-- Lista de contacto con puntos  -->
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: .5rem; color: var(--blue-mid);">●</span>
+                                <span style="
+                                    font-family: 'DM Sans', sans-serif;
+                                    font-weight: 300;
+                                    font-size: .85rem;
+                                    color: var(--muted);
+                                ">2606 1507 00</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: .5rem; color: var(--blue-mid);">●</span>
+                                <span style="
+                                    font-family: 'DM Sans', sans-serif;
+                                    font-weight: 300;
+                                    font-size: .85rem;
+                                    color: var(--muted);
+                                ">infinident@health&amp;esthethics.com.mx</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Columna derecha: lista de servicios -->
+                <div>
+                    <p class="section-label">Servicios Destacados</p>
+                    <ul class="servicios-grid">
+                        <li><span class="s-nombre">Odontología Estética</span><span class="s-desc">Diseño de sonrisa, blanqueamiento dental láser y carillas de porcelana.</span></li>
+                        <li><span class="s-nombre">Ortodoncia Avanzada</span><span class="s-desc">Brackets convencionales, estéticos e Invisalign (alineadores invisibles).</span></li>
+                        <li><span class="s-nombre">Endodoncia</span><span class="s-desc">Tratamientos de conducto sin dolor con tecnología rotatoria.</span></li>
+                        <li><span class="s-nombre">Implantología</span><span class="s-desc">Reemplazo de piezas dentales con pernos de titanio de alta durabilidad.</span></li>
+                        <li><span class="s-nombre">Odontopediatría</span><span class="s-desc">Atención especializada para niños en un ambiente amigable.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Tarjeta del collage de las instalaciones  -->
+    <div class="card" style="margin-bottom:0;">
+        <div class="header-instalaciones">
+            <h2>Nuestras Instalaciones</h2>
+            <p>Explora nuestras áreas clínicas equipadas con tecnología de vanguardia para tu seguridad y confort.</p>
+        </div>
+        <div class="collage-container">
+            <img src="INF1.png" alt="Instalaciones 1" class="collage-img img-grande">
+            <img src="INF2.png" alt="Instalaciones 2" class="collage-img">
+            <img src="INF3.png" alt="Instalaciones 3" class="collage-img">
+            <img src="INF4.png" alt="Instalaciones 4" class="collage-img">
+            <img src="INF5.png" alt="Instalaciones 5" class="collage-img">
+        </div>
+    </div>
+
+</section>
+
+
+<!--  Sección Odontólogos  -->
+
+<!-- Formulario de registro / edición de odontólogos -->
+<section id="sec-odontologos" class="seccion">
+
+    <div id="od-cardForm" class="card">
+        <div class="card-header">
+            <h2 id="od-titulo">Registro de Especialistas</h2>
+            <p id="od-subtitulo">Ingrese los datos del odontólogo para incorporarlo al cuerpo médico.</p>
+        </div>
+        <div class="card-body">
+            <form id="od-form">
+                <input type="hidden" id="od-editId" value="">
+                <div class="form-grid">
+                    <div class="form-group col-larga">
+                        <label>Nombre Completo</label>
+                        <input type="text" id="od-nombre" class="form-control" placeholder="Ej. Dr. Raúl Méndez" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Cédula Profesional</label>
+                        <input type="text" id="od-cedula" class="form-control" placeholder="Ej. CED-000000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Especialidad</label>
+                        <input type="text" id="od-especialidad" class="form-control" placeholder="Ej. Endodoncia" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Consultorio</label>
+                        <input type="text" id="od-consultorio" class="form-control" placeholder="Ej. Unidad 01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="tel" id="od-telefono" class="form-control" placeholder="Ej. 555-0000" required>
+                    </div>
+                    <div class="form-group col-larga">
+                        <label>Dirección</label>
+                        <input type="text" id="od-direccion" class="form-control" placeholder="Ej. Calle Falsa #123" required>
+                    </div>
+                    <div class="form-group">
+                        <label>RFC</label>
+                        <input type="text" id="od-rfc" class="form-control" placeholder="Ej. ABCD900101XYZ" required>
+                    </div>
+                </div>
+                <div class="botones-container">
+                    <button type="submit" id="od-btnGuardar" class="btn btn-primary">Guardar Especialista</button>
+                    <!-- Cancelar edición solo es visible cuando se está editando un registro -->
+                    <button type="button" id="od-btnCancelar" class="btn btn-secondary oculto">Cancelar Edición</button>
+                    <button type="button" id="od-btnVer" class="btn btn-secondary">Visualizar Tabla</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Tabla de odontólogos registrados -->
+    <div id="od-cardTabla" class="card oculto">
+        <div class="card-header">
+            <h2>Cuerpo Médico Activo</h2>
+            <p>Lista oficial de especialistas registrados.</p>
+        </div>
+        <div class="card-body">
+            <div class="search-container">
+                <input type="text" id="od-buscar" class="search-control" placeholder="🔍 Buscar por nombre, especialidad o cédula...">
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead><tr>
+                        <th>Nombre</th><th>Cédula</th><th>Especialidad</th>
+                        <th>Consultorio</th><th>Teléfono</th><th>Dirección</th>
+                        <th>RFC</th><th style="text-align:center">Acciones</th>
+                    </tr></thead>
+                    <!-- Las tablas se generan dinámicamente con JavaScript -->
+                    <tbody id="od-tbody"></tbody>
+                </table>
+            </div>
+            <div class="botones-container" style="margin-top:20px;">
+                <button type="button" id="od-btnVolver" class="btn btn-secondary">← Volver al Formulario</button>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<!--  Sección Pacientes  -->
+
+<!-- Formulario de registro / edición de pacientes -->
+<section id="sec-pacientes" class="seccion">
+
+    <div id="pac-cardForm" class="card">
+        <div class="card-header">
+            <h2 id="pac-titulo">Registro de Nuevos Pacientes</h2>
+            <p id="pac-subtitulo">Ingrese los datos para abrir el expediente clínico.</p>
+        </div>
+        <div class="card-body">
+            <form id="pac-form">
+                <input type="hidden" id="pac-editId" value="">
+                <div class="form-grid">
+                    <div class="form-group col-larga">
+                        <label>Nombre Completo</label>
+                        <input type="text" id="pac-nombre" class="form-control" placeholder="Ej. Ana García" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de Nacimiento</label>
+                        <input type="date" id="pac-fecha" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Género</label>
+                        <select id="pac-genero" class="form-control" required>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Masculino">Masculino</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Sangre</label>
+                        <input type="text" id="pac-sangre" class="form-control" placeholder="Ej. O+" required>
+                    </div>
+                    <div class="form-group col-larga">
+                        <label>Alergias / Padecimientos</label>
+                        <input type="text" id="pac-alergias" class="form-control" placeholder="Ej. Penicilina" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="tel" id="pac-telefono" class="form-control" placeholder="Ej. 555-0000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Correo</label>
+                        <input type="email" id="pac-correo" class="form-control" placeholder="Ej. ana@mail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>CURP</label>
+                        <input type="text" id="pac-curp" class="form-control" placeholder="Ej. XYZE150101ABC" required>
+                    </div>
+                    <div class="form-group col-larga">
+                        <label>Dirección</label>
+                        <input type="text" id="pac-direccion" class="form-control" placeholder="Ej. Calle Sunshine #098" required>
+                    </div>
+                    <div class="form-group col-larga">
+                        <label>Contacto de Emergencia</label>
+                        <input type="text" id="pac-contacto" class="form-control" placeholder="Luis Martinez (Padre) 555-1111" required>
+                    </div>
+                </div>
+                <div class="botones-container">
+                    <button type="submit" id="pac-btnGuardar" class="btn btn-primary">Guardar Paciente</button>
+                    <button type="button" id="pac-btnCancelar" class="btn btn-secondary oculto">Cancelar Edición</button>
+                    <button type="button" id="pac-btnVer" class="btn btn-secondary">Visualizar Tabla</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Tabla de pacientes registrados -->
+    <div id="pac-cardTabla" class="card oculto">
+        <div class="card-header">
+            <h2>Control de Pacientes</h2>
+            <p>Expedientes clínicos registrados en el consultorio.</p>
+        </div>
+        <div class="card-body">
+            <div class="search-container">
+                <input type="text" id="pac-buscar" class="search-control" placeholder="🔍 Buscar por nombre, CURP o padecimientos...">
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead><tr>
+                        <th>Nombre</th><th>Nacimiento</th><th>Género</th><th>Sangre</th>
+                        <th>Alergias</th><th>Teléfono</th><th>Correo</th><th>CURP</th>
+                        <th>Dirección</th><th>Contacto Emerg.</th><th style="text-align:center">Acciones</th>
+                    </tr></thead>
+                    <tbody id="pac-tbody"></tbody>
+                </table>
+            </div>
+            <div class="botones-container" style="margin-top:20px;border-top:none;padding-top:0;">
+                <button type="button" id="pac-btnVolver" class="btn btn-secondary">← Volver al Formulario</button>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<!--  Sección Citas  -->
+
+<!-- Formulario de registro / edición de citas -->
+<section id="sec-citas" class="seccion">
+
+    <div id="cit-cardForm" class="card">
+        <div class="card-header">
+            <h2 id="cit-titulo">Agendar Nueva Cita Médica</h2>
+            <p id="cit-subtitulo">Complete el formulario para reservar un horario de consulta dental.</p>
+        </div>
+        <div class="card-body">
+            <form id="cit-form">
+                <input type="hidden" id="cit-editId" value="">
+                <div class="form-grid">
+                    <div class="form-group col-larga">
+                        <label>Nombre del Paciente</label>
+                        <input type="text" id="cit-paciente" class="form-control" placeholder="Ej. Ana García" required>
+                    </div>
+                    <div class="form-group col-larga">
+                        <label>Nombre del Odontólogo</label>
+                        <input type="text" id="cit-odontologo" class="form-control" placeholder="Ej. Dr. Raúl Méndez" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input type="date" id="cit-fecha" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Hora</label>
+                        <input type="text" id="cit-hora" class="form-control" placeholder="Ej. 09:00 AM" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Estado</label>
+                        <select id="cit-estado" class="form-control" required>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Realizada">Realizada</option>
+                            <option value="Cancelada">Cancelada</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-larga">
+                        <label>Motivo de Consulta</label>
+                        <input type="text" id="cit-motivo" class="form-control" placeholder="Ej. Limpieza, Extracción, Dolor de muela" required>
+                    </div>
+                </div>
+                <div class="botones-container">
+                    <button type="submit" id="cit-btnGuardar" class="btn btn-primary">Agendar Cita</button>
+                    <button type="button" id="cit-btnCancelar" class="btn btn-secondary oculto">Cancelar Edición</button>
+                    <button type="button" id="cit-btnVer" class="btn btn-secondary">Visualizar Tabla</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Tabla de citas agendadas -->
+    <div id="cit-cardTabla" class="card oculto">
+        <div class="card-header">
+            <h2>Control y Agenda de Citas</h2>
+            <p>Monitoreo de horarios, asignación de odontólogos y estados.</p>
+        </div>
+        <div class="card-body">
+            <div class="search-container">
+                <input type="text" id="cit-buscar" class="search-control" placeholder="🔍 Buscar por paciente, odontólogo o motivo...">
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead><tr>
+                        <th>Paciente</th><th>Odontólogo</th><th>Fecha</th>
+                        <th>Hora</th><th>Motivo</th><th>Estado</th>
+                        <th style="text-align:center">Acciones</th>
+                    </tr></thead>
+                    <tbody id="cit-tbody"></tbody>
+                </table>
+            </div>
+            <div class="botones-container" style="margin-top:20px;">
+                <button type="button" id="cit-btnVolver" class="btn btn-secondary">← Volver al Formulario</button>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!--  Sección Recetas -->
+
+<!-- Formulario de registro / edición de recetas -->
+<section id="sec-recetas" class="seccion">
+
+    <div id="rec-cardForm" class="card">
+        <div class="card-header">
+            <h2 id="rec-titulo">Emisión de Nueva Receta Médica</h2>
+            <p id="rec-subtitulo">Registre medicamentos, dosis y materiales de laboratorio.</p>
+        </div>
+        <div class="card-body">
+            <form id="rec-form">
+                <input type="hidden" id="rec-editId" value="">
+                <div class="form-grid">
+                    <div class="form-group col-larga">
+                        <label>Nombre del Paciente</label>
+                        <input type="text" id="rec-paciente" class="form-control" placeholder="Ej. Jorge Slim" required>
+                    </div>
+                    <div class="form-group col-larga">
+                        <label>Medicamentos / Fármacos Prescritos</label>
+                        <input type="text" id="rec-medicamentos" class="form-control" placeholder="Ej. Paracetamol 500 mg (Si no aplica: Ninguno)" required>
+                    </div>
+                    <div class="form-group col-larga">
+                        <label>Instrucciones y Posología</label>
+                        <input type="text" id="rec-instrucciones" class="form-control" placeholder="Ej. Cada 8 horas por 3 días" required>
+                    </div>
+                    <div class="form-group col-larga">
+                        <label>Materiales de Laboratorio Dental</label>
+                        <input type="text" id="rec-materiales" class="form-control" placeholder="Ej. Corona Zirconio (Si no requiere: Ninguno)" required>
+                    </div>
+                </div>
+                <div class="botones-container">
+                    <button type="submit" id="rec-btnGuardar" class="btn btn-primary">Emitir Receta</button>
+                    <button type="button" id="rec-btnCancelar" class="btn btn-secondary oculto">Cancelar Edición</button>
+                    <button type="button" id="rec-btnVer" class="btn btn-secondary">Ver Historial de Recetas</button>
+                </div>
+            </form>
+        </div>
+    </div>
+     <!-- Tabla de recetas emitidas -->
+    <div id="rec-cardTabla" class="card oculto">
+        <div class="card-header">
+            <h2>Historial de Recetas Emitidas</h2>
+            <p>Prescripciones vigentes e indicaciones post-tratamiento.</p>
+        </div>
+        <div class="card-body">
+            <div class="search-container">
+                <input type="text" id="rec-buscar" class="search-control" placeholder="🔍 Buscar por paciente, medicamento o material...">
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead><tr>
+                        <th>Paciente</th><th>Medicamentos</th><th>Instrucciones</th>
+                        <th>Materiales</th><th style="text-align:center">Acciones</th>
+                    </tr></thead>
+                    <tbody id="rec-tbody"></tbody>
+                </table>
+            </div>
+            <div class="botones-container" style="margin-top:20px;">
+                <button type="button" id="rec-btnVolver" class="btn btn-secondary">← Volver al Formulario</button>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<!-- Sección Historial  -->
+
+<!-- Formulario de registro / edición de historiales o consultas -->
+<section id="sec-historial" class="seccion">
+
+    <div id="his-cardForm" class="card">
+        <div class="card-header">
+            <h2 id="his-titulo">Consultas e Historial Clínico</h2>
+            <p id="his-subtitulo">Registro detallado de diagnósticos, evoluciones y tratamientos.</p>
+        </div>
+        <div class="card-body">
+            <form id="his-form">
+                <input type="hidden" id="his-editId" value="">
+                <div class="form-grid">
+                    <div class="form-group col-larga">
+                        <label>Nombre del Paciente</label>
+                        <input type="text" id="his-paciente" class="form-control" placeholder="Ej. Jorge Slim" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Número de Dientes</label>
+                        <input type="text" id="his-dientes" class="form-control" placeholder="Ej. 16, 26 o Todos" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Superficie Dental</label>
+                        <input type="text" id="his-superficie" class="form-control" placeholder="Ej. Oclusal / Distal" required>
+                    </div>
+                    <div class="form-group col-larga">
+                        <label>Hallazgos / Diagnóstico</label>
+                        <input type="text" id="his-hallazgos" class="form-control" placeholder="Ej. Caries Grado 2" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Procedimiento Realizado</label>
+                        <input type="text" id="his-procedimiento" class="form-control" placeholder="Ej. Resina / Amalgama" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Link de la Radiografía</label>
+                        <input type="text" id="his-radiografia" class="form-control" placeholder="Ej. rx.com/001 (o Ninguno)" required>
+                    </div>
+                </div>
+                <div class="botones-container">
+                    <button type="submit" id="his-btnGuardar" class="btn btn-primary">Guardar en Historial</button>
+                    <button type="button" id="his-btnCancelar" class="btn btn-secondary oculto">Cancelar Edición</button>
+                    <button type="button" id="his-btnVer" class="btn btn-secondary">Ver Expedientes Clínicos</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Tabla de historiales de pacientes -->
+    <div id="his-cardTabla" class="card oculto">
+        <div class="card-header">
+            <h2>Expedientes Clínicos Registrados</h2>
+            <p>Diagnósticos, piezas intervenidas y soportes radiográficos.</p>
+        </div>
+        <div class="card-body">
+            <div class="search-container">
+                <input type="text" id="his-buscar" class="search-control" placeholder="🔍 Buscar por paciente, hallazgos o procedimiento...">
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead><tr>
+                        <th>Paciente</th><th>Dientes</th><th>Superficie</th>
+                        <th>Hallazgos</th><th>Procedimiento</th><th>Radiografía</th>
+                        <th style="text-align:center">Acciones</th>
+                    </tr></thead>
+                    <tbody id="his-tbody"></tbody>
+                </table>
+            </div>
+            <div class="botones-container" style="margin-top:20px;border-top:none;padding-top:0;">
+                <button type="button" id="his-btnVolver" class="btn btn-secondary">← Volver al Formulario</button>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<!--  Sección Pagos  -->
+
+<!-- Formulario de registro / edición de pagos -->
+<section id="sec-pagos" class="seccion">
+
+    <div id="pag-cardForm" class="card">
+        <div class="card-header">
+            <h2 id="pag-titulo">Captura de Gestión Financiera</h2>
+            <p id="pag-subtitulo">Introduce los datos de la transacción del paciente.</p>
+        </div>
+        <div class="card-body">
+            <form id="pag-form">
+                <input type="hidden" id="pag-editId" value="">
+                <div class="form-grid">
+                    <div class="form-group col-larga">
+                        <label>Nombre del Paciente</label>
+                        <input type="text" id="pag-paciente" class="form-control" placeholder="Ej. Jorge Slim" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha Pago</label>
+                        <input type="date" id="pag-fecha" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Monto Total ($)</label>
+                        <input type="number" id="pag-total" class="form-control" placeholder="0.00" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Monto Abonado ($)</label>
+                        <input type="number" id="pag-abonado" class="form-control" placeholder="0.00" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Método de Pago</label>
+                        <select id="pag-metodo" class="form-control" required>
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Tarjeta">Tarjeta</option>
+                            <option value="Transferencia">Transferencia</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Factura / Recibo</label>
+                        <input type="text" id="pag-documento" class="form-control" placeholder="Ej. FAC-550" required>
+                    </div>
+                </div>
+                <div class="botones-container">
+                    <button type="submit" id="pag-btnGuardar" class="btn btn-primary">Guardar Datos</button>
+                    <button type="button" id="pag-btnCancelar" class="btn btn-secondary oculto">Cancelar Edición</button>
+                    <button type="button" id="pag-btnVer" class="btn btn-secondary">Visualizar Datos</button>
+                </div>
+            </form>
+        </div>
+    </div>
+     <!-- Tabla de pagos realizados -->
+    <div id="pag-cardTabla" class="card oculto">
+        <div class="card-header">
+            <h2>Registros de Pagos</h2>
+            <p>Historial y balance financiero desde MongoDB Atlas.</p>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table>
+                    <thead><tr>
+                        <th>Paciente</th><th>Fecha</th><th>Total</th><th>Abonado</th>
+                        <th>Saldo</th><th>Método</th><th>Factura</th>
+                        <th style="text-align:center">Acciones</th>
+                    </tr></thead>
+                    <tbody id="pag-tbody"></tbody>
+                </table>
+            </div>
+            <div class="botones-container" style="margin-top:20px;border-top:none;padding-top:0;">
+                <button type="button" id="pag-btnVolver" class="btn btn-secondary">← Volver al Formulario</button>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<!--  Sección Inventario   -->
+
+<!-- Formulario de registro / edición del inventario de productos -->
+<section id="sec-inventario" class="seccion">
+
+    <div id="inv-cardForm" class="card">
+        <div class="card-header">
+            <h2 id="inv-titulo">Control de Almacén e Inventario</h2>
+            <p id="inv-subtitulo">Da de alta o modifica suministros y materiales dentales.</p>
+        </div>
+        <div class="card-body">
+            <form id="inv-form">
+                <input type="hidden" id="inv-editId" value="">
+                <div class="form-grid">
+                    <div class="form-group col-larga">
+                        <label>Nombre del Producto</label>
+                        <input type="text" id="inv-producto" class="form-control" placeholder="Ej. Resina Compuesta A2" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoría</label>
+                        <input type="text" id="inv-categoria" class="form-control" placeholder="Ej. Restauración" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Stock Actual</label>
+                        <input type="number" id="inv-stock" class="form-control" placeholder="0" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Stock Mínimo</label>
+                        <input type="number" id="inv-minimo" class="form-control" placeholder="0" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Unidad de Medida</label>
+                        <input type="text" id="inv-unidad" class="form-control" placeholder="Ej. Caja (100)" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Precio Unitario ($)</label>
+                        <input type="number" id="inv-precio" class="form-control" placeholder="0.00" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group col-larga">
+                        <label>Proveedor Asignado</label>
+                        <input type="text" id="inv-proveedor" class="form-control" placeholder="Ej. DentalMax" required>
+                    </div>
+                </div>
+                <div class="botones-container">
+                    <button type="submit" id="inv-btnGuardar" class="btn btn-primary">Guardar Producto</button>
+                    <button type="button" id="inv-btnCancelar" class="btn btn-secondary oculto">Cancelar Edición</button>
+                    <button type="button" id="inv-btnVer" class="btn btn-secondary">Visualizar Almacén</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Tabla de los suministros del inventario -->
+    <div id="inv-cardTabla" class="card oculto">
+        <div class="card-header">
+            <h2>Existencias del Almacén General</h2>
+            <p>Lista analítica de insumos médicos en inventario permanente.</p>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table>
+                    <thead><tr>
+                        <th>Producto</th><th>Categoría</th><th>Stock</th><th>Mínimo</th>
+                        <th>Unidad</th><th>Precio</th><th>Proveedor</th>
+                        <th style="text-align:center">Acciones</th>
+                    </tr></thead>
+                    <tbody id="inv-tbody"></tbody>
+                </table>
+            </div>
+            <div class="botones-container" style="margin-top:20px;border-top:none;padding-top:0;">
+                <button type="button" id="inv-btnVolver" class="btn btn-secondary">← Volver al Formulario</button>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+</main>
+</div>
+
+
+<!--  Footer   -->
+<footer>
+    <img src="logonegocio.png" alt="Icono Diente" class="footer-diente">
+    <p>©2026 <strong>Izquierdo Gaytan Alexander</strong> &nbsp;|&nbsp; 24308051280852 &nbsp;|&nbsp; 4°J &nbsp;|&nbsp; Programación |</p>
+    <p><strong>Implementa bases de datos no relacionales</strong></p>
+</footer>
+
+<!--  JavaScript   -->
+<script>
+// URL del servidor 
+const BASE = 'https://5000-firebase-izquierdoalex0852-1771872281714.cluster-xvr5pmatm5a4gx76fmat6kxt6o.cloudworkstations.dev';
+
+
+//  Navegación por secciones
+//  Al hacer clic en un link del menú, oculta todo y muestra solo la sección correspondiente
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', e => {
+        e.preventDefault();
+        const sec = link.dataset.sec;
+
+        // Ocultar todas las secciones y desactivar links
+        document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('activo'));
+
+        document.getElementById('sec-' + sec).classList.add('activa');
+        link.classList.add('activo');
+
+        // Si es inventario, cargar datos al entrar
+        if (sec === 'inventario') invCargar();
+    });
+});
+
+
+//  HELPER: fetch genérico con manejo de errores
+async function api(method, endpoint, body) {
+    const opts = { method, headers: { 'Content-Type': 'application/json' } };
+    if (body) opts.body = JSON.stringify(body);
+    const res = await fetch(BASE + endpoint, opts);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error en el servidor');
+    return data;
+}
+
+
+//  MÓDULO: ODONTÓLOGOS
+let odDatos = [];
+
+async function odCargar() {
+    try {
+        odDatos = await api('GET', '/api/odontologos');
+        odRenderizar(document.getElementById('od-buscar').value);
+    } catch(e) { alert('Error al cargar odontólogos: ' + e.message); }
+}
+
+function odRenderizar(filtro = '') {
+    const tbody = document.getElementById('od-tbody');
+    tbody.innerHTML = '';
+    const filtrados = odDatos.filter(o => 
+        [o.nombre, o.cedula, o.especialidad].join(' ').toLowerCase().includes(filtro.toLowerCase()));
+
+    if (!filtrados.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--muted); font-size:.9rem;">
+            — No hay especialistas registrados aún —</td></tr>`;
+        return;
+    }
+    filtrados.forEach(o => {
+        tbody.insertAdjacentHTML('beforeend', `
+            <tr>
+                <td>${o.nombre}</td><td>${o.cedula}</td><td>${o.especialidad}</td>
+                <td>${o.consultorio}</td><td>${o.telefono}</td><td>${o.direccion}</td>
+                <td>${o.rfc}</td>
+                <td style="text-align:center">
+                    <button class="btn-action btn-edit" onclick="odEditar('${o._id}')">Editar</button>
+                    <button class="btn-action btn-delete" onclick="odEliminar('${o._id}','${o.nombre}')">Eliminar</button>
+                </td>
+            </tr>`);
+    });
+}
+
+document.getElementById('od-buscar').addEventListener('input', e => odRenderizar(e.target.value));
+document.getElementById('od-btnVer').addEventListener('click', async () => {
+    await odCargar();
+    document.getElementById('od-cardForm').classList.add('oculto');
+    document.getElementById('od-cardTabla').classList.remove('oculto');
+});
+document.getElementById('od-btnVolver').addEventListener('click', () => {
+    document.getElementById('od-cardTabla').classList.add('oculto');
+    document.getElementById('od-cardForm').classList.remove('oculto');
+});
+
+document.getElementById('od-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const id = document.getElementById('od-editId').value;
+    const datos = {
+        nombre: document.getElementById('od-nombre').value,
+        cedula: document.getElementById('od-cedula').value,
+        especialidad: document.getElementById('od-especialidad').value,
+        consultorio: document.getElementById('od-consultorio').value,
+        telefono: document.getElementById('od-telefono').value,
+        direccion: document.getElementById('od-direccion').value,
+        rfc: document.getElementById('od-rfc').value
+    };
+    try {
+        if (!id) {
+            await api('POST', '/api/odontologos', datos);
+            alert('✅ Odontólogo guardado en MongoDB.');
+        } else {
+            await api('PUT', '/api/odontologos/' + id, datos);
+            alert('✅ Odontólogo actualizado.');
+            odRestablecer();
+        }
+        this.reset();
+    } catch(e) { alert('Error: ' + e.message); }
+});
+
+window.odEditar = function(id) {
+    const o = odDatos.find(x => x._id === id);
+    if (!o) return;
+    document.getElementById('od-editId').value = o._id;
+    document.getElementById('od-nombre').value = o.nombre;
+    document.getElementById('od-cedula').value = o.cedula;
+    document.getElementById('od-especialidad').value = o.especialidad;
+    document.getElementById('od-consultorio').value = o.consultorio;
+    document.getElementById('od-telefono').value = o.telefono;
+    document.getElementById('od-direccion').value = o.direccion;
+    document.getElementById('od-rfc').value = o.rfc;
+    document.getElementById('od-titulo').innerText = 'Editar Especialista';
+    document.getElementById('od-btnGuardar').innerText = 'Actualizar Especialista';
+    document.getElementById('od-btnCancelar').classList.remove('oculto');
+    document.getElementById('od-cardTabla').classList.add('oculto');
+    document.getElementById('od-cardForm').classList.remove('oculto');
+};
+
+window.odEliminar = async function(id, nombre) {
+    if (!confirm(`¿Eliminar al Dr. ${nombre}?`)) return;
+    try {
+        await api('DELETE', '/api/odontologos/' + id);
+        alert('✅ Eliminado correctamente.');
+        await odCargar();
+    } catch(e) { alert('Error: ' + e.message); }
+};
+
+document.getElementById('od-btnCancelar').addEventListener('click', odRestablecer);
+function odRestablecer() {
+    document.getElementById('od-form').reset();
+    document.getElementById('od-editId').value = '';
+    document.getElementById('od-titulo').innerText = 'Registro de Especialistas';
+    document.getElementById('od-btnGuardar').innerText = 'Guardar Especialista';
+    document.getElementById('od-btnCancelar').classList.add('oculto');
+}
+
+
+//  MÓDULO: PACIENTES
+let pacDatos = [];
+
+async function pacCargar() {
+    try {
+        pacDatos = await api('GET', '/api/pacientes');
+        pacRenderizar(document.getElementById('pac-buscar').value);
+    } catch(e) { alert('Error al cargar pacientes: ' + e.message); }
+}
+
+function pacRenderizar(filtro = '') {
+    const tbody = document.getElementById('pac-tbody');
+    tbody.innerHTML = '';
+    const filtrados = pacDatos.filter(p => 
+        [p.nombre, p.curp, p.alergias].join(' ').toLowerCase().includes(filtro.toLowerCase()));
+
+    if (!filtrados.length) {
+        tbody.innerHTML = `<tr><td colspan="11" style="text-align:center; padding:30px; color:var(--muted); font-size:.9rem;">
+            — No hay pacientes registrados aún —</td></tr>`;
+        return;
+    }
+    filtrados.forEach(p => {
+        const badge = p.genero === 'Femenino' ? 'badge-nombref' : 'badge-nombreh';
+        tbody.insertAdjacentHTML('beforeend', `
+            <tr>
+                <td><span class="badge ${badge}">${p.nombre}</span></td>
+                <td>${p.fechaNac}</td><td>${p.genero}</td><td>${p.tipoSangre}</td>
+                <td>${p.alergias}</td><td>${p.telefono}</td><td>${p.correo}</td>
+                <td>${p.curp}</td><td>${p.direccion}</td><td>${p.contactoEmergencia}</td>
+                <td style="text-align:center">
+                    <button class="btn-action btn-edit" onclick="pacEditar('${p._id}')">Editar</button>
+                    <button class="btn-action btn-delete" onclick="pacEliminar('${p._id}','${p.nombre}')">Eliminar</button>
+                </td>
+            </tr>`);
+    });
+}
+
+document.getElementById('pac-buscar').addEventListener('input', e => pacRenderizar(e.target.value));
+document.getElementById('pac-btnVer').addEventListener('click', async () => {
+    await pacCargar();
+    document.getElementById('pac-cardForm').classList.add('oculto');
+    document.getElementById('pac-cardTabla').classList.remove('oculto');
+});
+document.getElementById('pac-btnVolver').addEventListener('click', () => {
+    document.getElementById('pac-cardTabla').classList.add('oculto');
+    document.getElementById('pac-cardForm').classList.remove('oculto');
+});
+
+document.getElementById('pac-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const id = document.getElementById('pac-editId').value;
+    const fechaRaw = document.getElementById('pac-fecha').value;
+    let fechaFmt = fechaRaw;
+    if (fechaRaw.includes('-')) {
+        const [y,m,d] = fechaRaw.split('-');
+        fechaFmt = `${d}/${m}/${y}`;
+    }
+    const datos = {
+        nombre: document.getElementById('pac-nombre').value,
+        fechaNac: fechaFmt,
+        genero: document.getElementById('pac-genero').value,
+        tipoSangre: document.getElementById('pac-sangre').value,
+        alergias: document.getElementById('pac-alergias').value,
+        telefono: document.getElementById('pac-telefono').value,
+        correo: document.getElementById('pac-correo').value,
+        curp: document.getElementById('pac-curp').value,
+        direccion: document.getElementById('pac-direccion').value,
+        contactoEmergencia: document.getElementById('pac-contacto').value
+    };
+    try {
+        if (!id) {
+            await api('POST', '/api/pacientes', datos);
+            alert('✅ Paciente guardado en MongoDB.');
+        } else {
+            await api('PUT', '/api/pacientes/' + id, datos);
+            alert('✅ Paciente actualizado.');
+            pacRestablecer();
+        }
+        this.reset();
+    } catch(e) { alert('Error: ' + e.message); }
+});
+
+window.pacEditar = function(id) {
+    const p = pacDatos.find(x => x._id === id);
+    if (!p) return;
+    document.getElementById('pac-editId').value = p._id;
+    document.getElementById('pac-nombre').value = p.nombre;
+    document.getElementById('pac-genero').value = p.genero;
+    document.getElementById('pac-sangre').value = p.tipoSangre;
+    document.getElementById('pac-alergias').value = p.alergias;
+    document.getElementById('pac-telefono').value = p.telefono;
+    document.getElementById('pac-correo').value = p.correo;
+    document.getElementById('pac-curp').value = p.curp;
+    document.getElementById('pac-direccion').value = p.direccion;
+    document.getElementById('pac-contacto').value = p.contactoEmergencia;
+    if (p.fechaNac && p.fechaNac.includes('/')) {
+        const [d,m,y] = p.fechaNac.split('/');
+        document.getElementById('pac-fecha').value = `${y}-${m}-${d}`;
+    }
+    document.getElementById('pac-titulo').innerText = 'Editar Expediente Clínico';
+    document.getElementById('pac-btnGuardar').innerText = 'Actualizar Expediente';
+    document.getElementById('pac-btnCancelar').classList.remove('oculto');
+    document.getElementById('pac-cardTabla').classList.add('oculto');
+    document.getElementById('pac-cardForm').classList.remove('oculto');
+};
+
+window.pacEliminar = async function(id, nombre) {
+    if (!confirm(`¿Eliminar el expediente de ${nombre}?`)) return;
+    try {
+        await api('DELETE', '/api/pacientes/' + id);
+        alert('✅ Eliminado.');
+        await pacCargar();
+    } catch(e) { alert('Error: ' + e.message); }
+};
+
+document.getElementById('pac-btnCancelar').addEventListener('click', pacRestablecer);
+function pacRestablecer() {
+    document.getElementById('pac-form').reset();
+    document.getElementById('pac-editId').value = '';
+    document.getElementById('pac-titulo').innerText = 'Registro de Nuevos Pacientes';
+    document.getElementById('pac-btnGuardar').innerText = 'Guardar Paciente';
+    document.getElementById('pac-btnCancelar').classList.add('oculto');
+}
+
+
+//  MÓDULO: CITAS
+let citDatos = [];
+
+async function citCargar() {
+    try {
+        citDatos = await api('GET', '/api/citas');
+        citRenderizar(document.getElementById('cit-buscar').value);
+    } catch(e) { alert('Error al cargar citas: ' + e.message); }
+}
+
+function citRenderizar(filtro = '') {
+    const tbody = document.getElementById('cit-tbody');
+    tbody.innerHTML = '';
+    const filtrados = citDatos.filter(c => 
+        [c.paciente, c.odontologo, c.motivo].join(' ').toLowerCase().includes(filtro.toLowerCase()));
+    
+    if (!filtrados.length) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--muted); font-size:.9rem;">
+            — No hay citas registradas aún —</td></tr>`;
+        return;
+    }
+    filtrados.forEach(c => {
+            const bdg = c.estado === 'Realizada' ? 'badge-success' : c.estado === 'Cancelada' ? 'badge-danger' : 'badge-warning';
+            tbody.insertAdjacentHTML('beforeend', `
+                <tr>
+                    <td><span class="badge badge-paciente">${c.paciente}</span></td>
+                    <td>${c.odontologo}</td><td>${c.fecha}</td><td>${c.hora}</td>
+                    <td>${c.motivo}</td>
+                    <td><span class="badge ${bdg}">${c.estado}</span></td>
+                    <td style="text-align:center">
+                        <button class="btn-action btn-edit" onclick="citEditar('${c._id}')">Editar</button>
+                        <button class="btn-action btn-delete" onclick="citEliminar('${c._id}','${c.paciente}')">Eliminar</button>
+                    </td>
+                </tr>`);
+        });
+}
+
+document.getElementById('cit-buscar').addEventListener('input', e => citRenderizar(e.target.value));
+document.getElementById('cit-btnVer').addEventListener('click', async () => {
+    await citCargar();
+    document.getElementById('cit-cardForm').classList.add('oculto');
+    document.getElementById('cit-cardTabla').classList.remove('oculto');
+});
+document.getElementById('cit-btnVolver').addEventListener('click', () => {
+    document.getElementById('cit-cardTabla').classList.add('oculto');
+    document.getElementById('cit-cardForm').classList.remove('oculto');
+});
+
+document.getElementById('cit-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const id = document.getElementById('cit-editId').value;
+    const fechaRaw = document.getElementById('cit-fecha').value;
+    let fechaFmt = fechaRaw;
+    if (fechaRaw.includes('-')) {
+        const [y,m,d] = fechaRaw.split('-');
+        fechaFmt = `${d}/${m}/${y}`;
+    }
+    const datos = {
+        paciente: document.getElementById('cit-paciente').value.trim(),
+        odontologo: document.getElementById('cit-odontologo').value.trim(),
+        fecha: fechaFmt,
+        hora: document.getElementById('cit-hora').value.trim(),
+        estado: document.getElementById('cit-estado').value,
+        motivo: document.getElementById('cit-motivo').value.trim()
+    };
+    try {
+        if (!id) {
+            await api('POST', '/api/citas', datos);
+            alert('✅ Cita agendada en MongoDB.');
+        } else {
+            await api('PUT', '/api/citas/' + id, datos);
+            alert('✅ Cita actualizada.');
+            citRestablecer();
+        }
+        this.reset();
+    } catch(e) { alert('Error: ' + e.message); }
+});
+
+window.citEditar = function(id) {
+    const c = citDatos.find(x => x._id === id);
+    if (!c) return;
+    document.getElementById('cit-editId').value = c._id;
+    document.getElementById('cit-paciente').value = c.paciente;
+    document.getElementById('cit-odontologo').value = c.odontologo;
+    document.getElementById('cit-hora').value = c.hora;
+    document.getElementById('cit-estado').value = c.estado;
+    document.getElementById('cit-motivo').value = c.motivo;
+    if (c.fecha && c.fecha.includes('/')) {
+        const [d,m,y] = c.fecha.split('/');
+        document.getElementById('cit-fecha').value = `${y}-${m}-${d}`;
+    }
+    document.getElementById('cit-titulo').innerText = 'Modificar Cita Agendada';
+    document.getElementById('cit-btnGuardar').innerText = 'Actualizar Cita';
+    document.getElementById('cit-btnCancelar').classList.remove('oculto');
+    document.getElementById('cit-cardTabla').classList.add('oculto');
+    document.getElementById('cit-cardForm').classList.remove('oculto');
+};
+
+window.citEliminar = async function(id, nombre) {
+    if (!confirm(`¿Eliminar la cita de ${nombre}?`)) return;
+    try {
+        await api('DELETE', '/api/citas/' + id);
+        alert('✅ Cita eliminada.');
+        await citCargar();
+    } catch(e) { alert('Error: ' + e.message); }
+};
+
+document.getElementById('cit-btnCancelar').addEventListener('click', citRestablecer);
+function citRestablecer() {
+    document.getElementById('cit-form').reset();
+    document.getElementById('cit-editId').value = '';
+    document.getElementById('cit-titulo').innerText = 'Agendar Nueva Cita Médica';
+    document.getElementById('cit-btnGuardar').innerText = 'Agendar Cita';
+    document.getElementById('cit-btnCancelar').classList.add('oculto');
+}
+
+
+//  MÓDULO: RECETAS
+let recDatos = [];
+
+async function recCargar() {
+    try {
+        recDatos = await api('GET', '/api/recetas');
+        recRenderizar(document.getElementById('rec-buscar').value);
+    } catch(e) { alert('Error al cargar recetas: ' + e.message); }
+}
+
+function recRenderizar(filtro = '') {
+    const tbody = document.getElementById('rec-tbody');
+    tbody.innerHTML = '';
+    const filtrados = recDatos.filter(r => 
+        [r.paciente, r.medicamentos, r.materiales].join(' ').toLowerCase().includes(filtro.toLowerCase()));
+
+    if (!filtrados.length) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--muted); font-size:.9rem;">
+            — No hay recetas emitidas aún —</td></tr>`;
+        return;
+    }
+    filtrados.forEach(r => {
+            const med = r.medicamentos.toLowerCase() === 'ninguno' ? `<span class="badge badge-no">Ninguno</span>` : r.medicamentos;
+            const ins = r.instrucciones.toLowerCase() === 'ninguno' ? `<span class="badge badge-no">Ninguno</span>` : r.instrucciones;
+            const mat = r.materiales.toLowerCase() === 'ninguno' ? `<span class="badge badge-no">Ninguno</span>` : `<span class="badge badge-si">${r.materiales}</span>`;
+            tbody.insertAdjacentHTML('beforeend', `
+                <tr>
+                    <td><span class="badge badge-receta">${r.paciente}</span></td>
+                    <td>${med}</td><td>${ins}</td><td>${mat}</td>
+                    <td style="text-align:center;white-space:nowrap;">
+                        <button class="btn-action btn-edit" onclick="recEditar('${r._id}')">Editar</button>
+                        <button class="btn-action btn-delete" onclick="recEliminar('${r._id}','${r.paciente}')">Eliminar</button>
+                    </td>
+                </tr>`);
+        });
+}
+document.getElementById('rec-buscar').addEventListener('input', e => recRenderizar(e.target.value));
+document.getElementById('rec-btnVer').addEventListener('click', async () => {
+    await recCargar();
+    document.getElementById('rec-cardForm').classList.add('oculto');
+    document.getElementById('rec-cardTabla').classList.remove('oculto');
+});
+document.getElementById('rec-btnVolver').addEventListener('click', () => {
+    document.getElementById('rec-cardTabla').classList.add('oculto');
+    document.getElementById('rec-cardForm').classList.remove('oculto');
+});
+
+document.getElementById('rec-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const id = document.getElementById('rec-editId').value;
+    const datos = {
+        paciente: document.getElementById('rec-paciente').value.trim(),
+        medicamentos: document.getElementById('rec-medicamentos').value.trim(),
+        instrucciones: document.getElementById('rec-instrucciones').value.trim(),
+        materiales: document.getElementById('rec-materiales').value.trim()
+    };
+    try {
+        if (!id) {
+            await api('POST', '/api/recetas', datos);
+            alert('✅ Receta emitida en MongoDB.');
+        } else {
+            await api('PUT', '/api/recetas/' + id, datos);
+            alert('✅ Receta actualizada.');
+            recRestablecer();
+        }
+        this.reset();
+    } catch(e) { alert('Error: ' + e.message); }
+});
+
+window.recEditar = function(id) {
+    const r = recDatos.find(x => x._id === id);
+    if (!r) return;
+    document.getElementById('rec-editId').value = r._id;
+    document.getElementById('rec-paciente').value = r.paciente;
+    document.getElementById('rec-medicamentos').value = r.medicamentos;
+    document.getElementById('rec-instrucciones').value = r.instrucciones;
+    document.getElementById('rec-materiales').value = r.materiales;
+    document.getElementById('rec-titulo').innerText = 'Modificar Receta Médica';
+    document.getElementById('rec-btnGuardar').innerText = 'Actualizar Receta';
+    document.getElementById('rec-btnCancelar').classList.remove('oculto');
+    document.getElementById('rec-cardTabla').classList.add('oculto');
+    document.getElementById('rec-cardForm').classList.remove('oculto');
+};
+
+window.recEliminar = async function(id, nombre) {
+    if (!confirm(`¿Eliminar la receta de ${nombre}?`)) return;
+    try {
+        await api('DELETE', '/api/recetas/' + id);
+        alert('✅ Receta eliminada.');
+        await recCargar();
+    } catch(e) { alert('Error: ' + e.message); }
+};
+
+document.getElementById('rec-btnCancelar').addEventListener('click', recRestablecer);
+function recRestablecer() {
+    document.getElementById('rec-form').reset();
+    document.getElementById('rec-editId').value = '';
+    document.getElementById('rec-titulo').innerText = 'Emisión de Nueva Receta Médica';
+    document.getElementById('rec-btnGuardar').innerText = 'Emitir Receta';
+    document.getElementById('rec-btnCancelar').classList.add('oculto');
+}
+
+
+//  MÓDULO: HISTORIAL
+let hisDatos = [];
+
+async function hisCargar() {
+    try {
+        hisDatos = await api('GET', '/api/historial');
+        hisRenderizar(document.getElementById('his-buscar').value);
+    } catch(e) { alert('Error al cargar historial: ' + e.message); }
+}
+
+function hisRenderizar(filtro = '') {
+    const tbody = document.getElementById('his-tbody');
+    tbody.innerHTML = '';
+    const filtrados = hisDatos.filter(h => 
+        [h.paciente, h.hallazgos, h.procedimiento].join(' ').toLowerCase().includes(filtro.toLowerCase()));
+
+    if (!filtrados.length) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--muted); font-size:.9rem;">
+            — No hay expedientes clínicos registrados aún —</td></tr>`;
+        return;
+    }
+    filtrados.forEach(h => {
+        const rx = h.radiografia.toLowerCase() === 'ninguno'
+            ? `<span class="badge badge-no">Ninguno</span>`
+            : `<span class="badge badge-rx" onclick="window.open('${h.radiografia}','_blank')">${h.radiografia}</span>`;
+        tbody.insertAdjacentHTML('beforeend', `
+            <tr>
+                <td><span class="badge badge-historial">${h.paciente}</span></td>
+                <td>${h.dientes}</td><td>${h.superficie}</td>
+                <td>${h.hallazgos}</td><td>${h.procedimiento}</td>
+                <td>${rx}</td>
+                <td style="text-align:center;white-space:nowrap;">
+                    <button class="btn-action btn-edit" onclick="hisEditar('${h._id}')">Editar</button>
+                    <button class="btn-action btn-delete" onclick="hisEliminar('${h._id}','${h.paciente}')">Eliminar</button>
+                </td>
+            </tr>`);
+    });
+}
+
+document.getElementById('his-buscar').addEventListener('input', e => hisRenderizar(e.target.value));
+document.getElementById('his-btnVer').addEventListener('click', async () => {
+    await hisCargar();
+    document.getElementById('his-cardForm').classList.add('oculto');
+    document.getElementById('his-cardTabla').classList.remove('oculto');
+});
+document.getElementById('his-btnVolver').addEventListener('click', () => {
+    document.getElementById('his-cardTabla').classList.add('oculto');
+    document.getElementById('his-cardForm').classList.remove('oculto');
+});
+
+document.getElementById('his-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const id = document.getElementById('his-editId').value;
+    const datos = {
+        paciente: document.getElementById('his-paciente').value.trim(),
+        dientes: document.getElementById('his-dientes').value.trim(),
+        superficie: document.getElementById('his-superficie').value.trim(),
+        hallazgos: document.getElementById('his-hallazgos').value.trim(),
+        procedimiento: document.getElementById('his-procedimiento').value.trim(),
+        radiografia: document.getElementById('his-radiografia').value.trim()
+    };
+    try {
+        if (!id) {
+            await api('POST', '/api/historial', datos);
+            alert('✅ Historial guardado en MongoDB.');
+        } else {
+            await api('PUT', '/api/historial/' + id, datos);
+            alert('✅ Historial actualizado.');
+            hisRestablecer();
+        }
+        this.reset();
+    } catch(e) { alert('Error: ' + e.message); }
+});
+
+window.hisEditar = function(id) {
+    const h = hisDatos.find(x => x._id === id);
+    if (!h) return;
+    document.getElementById('his-editId').value = h._id;
+    document.getElementById('his-paciente').value = h.paciente;
+    document.getElementById('his-dientes').value = h.dientes;
+    document.getElementById('his-superficie').value = h.superficie;
+    document.getElementById('his-hallazgos').value = h.hallazgos;
+    document.getElementById('his-procedimiento').value = h.procedimiento;
+    document.getElementById('his-radiografia').value = h.radiografia;
+    document.getElementById('his-titulo').innerText = 'Modificar Expediente Clínico';
+    document.getElementById('his-btnGuardar').innerText = 'Actualizar en MongoDB';
+    document.getElementById('his-btnCancelar').classList.remove('oculto');
+    document.getElementById('his-cardTabla').classList.add('oculto');
+    document.getElementById('his-cardForm').classList.remove('oculto');
+};
+
+window.hisEliminar = async function(id, nombre) {
+    if (!confirm(`¿Eliminar el historial de ${nombre}?`)) return;
+    try {
+        await api('DELETE', '/api/historial/' + id);
+        alert('✅ Historial eliminado.');
+        await hisCargar();
+    } catch(e) { alert('Error: ' + e.message); }
+};
+
+document.getElementById('his-btnCancelar').addEventListener('click', hisRestablecer);
+function hisRestablecer() {
+    document.getElementById('his-form').reset();
+    document.getElementById('his-editId').value = '';
+    document.getElementById('his-titulo').innerText = 'Consultas e Historial Clínico';
+    document.getElementById('his-btnGuardar').innerText = 'Guardar en Historial';
+    document.getElementById('his-btnCancelar').classList.add('oculto');
+}
+
+
+//  MÓDULO: PAGOS
+let pagDatos = [];
+
+async function pagCargar() {
+    try {
+        pagDatos = await api('GET', '/api/pagos');
+        pagRenderizar();
+    } catch(e) { alert('Error al cargar pagos: ' + e.message); }
+}
+
+function pagRenderizar() {
+    const tbody = document.getElementById('pag-tbody');
+    tbody.innerHTML = '';
+    if (!pagDatos.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--muted); font-size:.9rem;">
+            — No hay registros de pagos aún —</td></tr>`;
+        return;
+    }
+    pagDatos.forEach(p => {
+        const saldo = p.saldo !== undefined ? p.saldo : (p.total - p.abonado);
+        const celdaSaldo = saldo > 0 ? `<span class="badge badge-saldo-debe">$${saldo}</span>` : '$0';
+        let bdgMetodo = 'badge-efectivo';
+        if (p.metodo === 'Tarjeta') bdgMetodo = 'badge-tarjeta';
+        if (p.metodo === 'Transferencia') bdgMetodo = 'badge-transferencia';
+        tbody.insertAdjacentHTML('beforeend', `
+            <tr>
+                <td><span class="badge badge-lila">${p.paciente}</span></td>
+                <td>${p.fecha}</td><td>$${p.total}</td><td>$${p.abonado}</td>
+                <td>${celdaSaldo}</td>
+                <td><span class="badge ${bdgMetodo}">${p.metodo}</span></td>
+                <td>${p.documento}</td>
+                <td style="text-align:center;white-space:nowrap;">
+                    <button class="btn-action btn-edit" onclick="pagEditar('${p._id}')">Editar</button>
+                    <button class="btn-action btn-delete" onclick="pagEliminar('${p._id}','${p.paciente}')">Eliminar</button>
+                </td>
+            </tr>`);
+    });
+}
+
+document.getElementById('pag-btnVer').addEventListener('click', async () => {
+    await pagCargar();
+    document.getElementById('pag-cardForm').classList.add('oculto');
+    document.getElementById('pag-cardTabla').classList.remove('oculto');
+});
+document.getElementById('pag-btnVolver').addEventListener('click', () => {
+    document.getElementById('pag-cardTabla').classList.add('oculto');
+    document.getElementById('pag-cardForm').classList.remove('oculto');
+});
+
+document.getElementById('pag-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const id = document.getElementById('pag-editId').value;
+    const total = parseFloat(document.getElementById('pag-total').value);
+    const abonado = parseFloat(document.getElementById('pag-abonado').value);
+    const datos = {
+        paciente: document.getElementById('pag-paciente').value.trim(),
+        fecha: document.getElementById('pag-fecha').value,
+        total, abonado,
+        saldo: Math.max(0, total - abonado),
+        metodo: document.getElementById('pag-metodo').value,
+        documento: document.getElementById('pag-documento').value.trim()
+    };
+    try {
+        if (!id) {
+            await api('POST', '/api/pagos', datos);
+            alert('✅ Pago registrado en MongoDB.');
+        } else {
+            await api('PUT', '/api/pagos/' + id, datos);
+            alert('✅ Pago actualizado.');
+            pagRestablecer();
+        }
+        this.reset();
+    } catch(e) { alert('Error: ' + e.message); }
+});
+
+window.pagEditar = function(id) {
+    const p = pagDatos.find(x => x._id === id);
+    if (!p) return;
+    document.getElementById('pag-editId').value = p._id;
+    document.getElementById('pag-paciente').value = p.paciente;
+    document.getElementById('pag-fecha').value = p.fecha;
+    document.getElementById('pag-total').value = p.total;
+    document.getElementById('pag-abonado').value = p.abonado;
+    document.getElementById('pag-metodo').value = p.metodo;
+    document.getElementById('pag-documento').value = p.documento;
+    document.getElementById('pag-titulo').innerText = 'Modificar Registro Financiero';
+    document.getElementById('pag-btnGuardar').innerText = 'Actualizar Pago';
+    document.getElementById('pag-btnCancelar').classList.remove('oculto');
+    document.getElementById('pag-cardTabla').classList.add('oculto');
+    document.getElementById('pag-cardForm').classList.remove('oculto');
+};
+
+window.pagEliminar = async function(id, nombre) {
+    if (!confirm(`¿Eliminar el pago de ${nombre}?`)) return;
+    try {
+        await api('DELETE', '/api/pagos/' + id);
+        alert('✅ Pago eliminado.');
+        await pagCargar();
+    } catch(e) { alert('Error: ' + e.message); }
+};
+
+document.getElementById('pag-btnCancelar').addEventListener('click', pagRestablecer);
+function pagRestablecer() {
+    document.getElementById('pag-form').reset();
+    document.getElementById('pag-editId').value = '';
+    document.getElementById('pag-titulo').innerText = 'Captura de Gestión Financiera';
+    document.getElementById('pag-btnGuardar').innerText = 'Guardar Datos';
+    document.getElementById('pag-btnCancelar').classList.add('oculto');
+}
+
+
+//  MÓDULO: INVENTARIO
+let invDatos = [];
+
+async function invCargar() {
+    try {
+        invDatos = await api('GET', '/api/inventario');
+        invRenderizar();
+    } catch(e) { alert('Error al cargar inventario: ' + e.message); }
+}
+
+function invRenderizar() {
+    const tbody = document.getElementById('inv-tbody');
+    tbody.innerHTML = '';
+    if (!invDatos.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--muted); font-size:.9rem;">
+            — No hay insumos en bodega aún —</td></tr>`;
+        return;
+    }
+    invDatos.forEach(i => {
+        const stockCelda = i.stock <= i.minimo
+            ? `<span class="badge badge-stock-crit">${i.stock} (Stock Crítico)</span>`
+            : i.stock;
+        tbody.insertAdjacentHTML('beforeend', `
+            <tr>
+                <td><span class="badge badge-insumo">${i.producto}</span></td>
+                <td>${i.categoria}</td><td>${stockCelda}</td><td>${i.minimo}</td>
+                <td>${i.unidad}</td><td>$${parseFloat(i.precio).toFixed(2)}</td><td>${i.proveedor}</td>
+                <td style="text-align:center;">
+                    <button class="btn-action btn-edit" onclick="invEditar('${i._id}')">Editar</button>
+                    <button class="btn-action btn-delete" onclick="invEliminar('${i._id}','${i.producto}')">Eliminar</button>
+                </td>
+            </tr>`);
+    });
+}
+
+document.getElementById('inv-btnVer').addEventListener('click', async () => {
+    await invCargar();
+    document.getElementById('inv-cardForm').classList.add('oculto');
+    document.getElementById('inv-cardTabla').classList.remove('oculto');
+});
+document.getElementById('inv-btnVolver').addEventListener('click', () => {
+    document.getElementById('inv-cardTabla').classList.add('oculto');
+    document.getElementById('inv-cardForm').classList.remove('oculto');
+});
+
+document.getElementById('inv-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const id = document.getElementById('inv-editId').value;
+    const datos = {
+        producto: document.getElementById('inv-producto').value.trim(),
+        categoria: document.getElementById('inv-categoria').value.trim(),
+        stock: parseInt(document.getElementById('inv-stock').value),
+        minimo: parseInt(document.getElementById('inv-minimo').value),
+        unidad: document.getElementById('inv-unidad').value.trim(),
+        precio: parseFloat(document.getElementById('inv-precio').value),
+        proveedor: document.getElementById('inv-proveedor').value.trim()
+    };
+    try {
+        if (!id) {
+            await api('POST', '/api/inventario', datos);
+            alert('✅ Producto añadido al almacén en MongoDB.');
+        } else {
+            await api('PUT', '/api/inventario/' + id, datos);
+            alert('✅ Producto actualizado.');
+            invRestablecer();
+        }
+        this.reset();
+        await invCargar();
+    } catch(e) { alert('Error: ' + e.message); }
+});
+
+window.invEditar = function(id) {
+    const i = invDatos.find(x => x._id === id);
+    if (!i) return;
+    document.getElementById('inv-editId').value = i._id;
+    document.getElementById('inv-producto').value = i.producto;
+    document.getElementById('inv-categoria').value = i.categoria;
+    document.getElementById('inv-stock').value = i.stock;
+    document.getElementById('inv-minimo').value = i.minimo;
+    document.getElementById('inv-unidad').value = i.unidad;
+    document.getElementById('inv-precio').value = i.precio;
+    document.getElementById('inv-proveedor').value = i.proveedor;
+    document.getElementById('inv-titulo').innerText = 'Modificar Artículo de Almacén';
+    document.getElementById('inv-btnGuardar').innerText = 'Actualizar Stock';
+    document.getElementById('inv-btnCancelar').classList.remove('oculto');
+    document.getElementById('inv-cardTabla').classList.add('oculto');
+    document.getElementById('inv-cardForm').classList.remove('oculto');
+};
+
+window.invEliminar = async function(id, producto) {
+    if (!confirm(`¿Eliminar "${producto}" del almacén?`)) return;
+    try {
+        await api('DELETE', '/api/inventario/' + id);
+        alert('✅ Producto eliminado.');
+        await invCargar();
+    } catch(e) { alert('Error: ' + e.message); }
+};
+
+document.getElementById('inv-btnCancelar').addEventListener('click', invRestablecer);
+function invRestablecer() {
+    document.getElementById('inv-form').reset();
+    document.getElementById('inv-editId').value = '';
+    document.getElementById('inv-titulo').innerText = 'Control de Almacén e Inventario';
+    document.getElementById('inv-btnGuardar').innerText = 'Guardar Producto';
+    document.getElementById('inv-btnCancelar').classList.add('oculto');
+}
+
+// Carga inventario al inicio
+invCargar();
+</script>
+</body>
+</html>
