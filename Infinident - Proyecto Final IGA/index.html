@@ -461,6 +461,99 @@
         footer strong { color: var(--blue-light); font-weight: 500; }
         .footer-diente { width: 40px; height: 40px; object-fit: contain; opacity: 0.8; }
         @media (max-width: 600px) { footer { flex-direction: column; gap: 8px; padding: 20px; } }
+
+        /* ── MODAL DE CONTRASEÑA ── */
+        /* Fondo oscuro que cubre toda la pantalla al pedir contraseña */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(13,43,85,.55);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn .2s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        /* Caja blanca del modal */
+        .modal-box {
+            background: var(--white);
+            border-radius: 14px;
+            padding: 36px 40px;
+            max-width: 380px;
+            width: 90%;
+            border: 1px solid var(--blue-light);
+            box-shadow: 0 20px 60px rgba(13,43,85,.25);
+            animation: slideUp .25s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
+        }
+        /* Ícono de candado centrado */
+        .modal-icon { font-size: 2.2rem; text-align: center; margin-bottom: 14px; }
+        /* Título del modal */
+        .modal-titulo {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--blue-dark);
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        /* Descripción pequeña bajo el título */
+        .modal-desc { font-size: .82rem; color: var(--muted); text-align: center; margin-bottom: 20px; }
+        /* Input de contraseña dentro del modal */
+        .modal-input {
+            width: 100%;
+            padding: 11px 14px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            border: 1px solid var(--blue-light);
+            border-radius: 6px;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+        .modal-input:focus { outline: none; border-color: var(--blue); }
+        /* Mensaje de error si la contraseña es incorrecta */
+        .modal-error {
+            font-size: .8rem;
+            color: #e23c94;
+            margin-bottom: 8px;
+            min-height: 18px;
+        }
+        /* Mensaje de éxito si la contraseña es correcta */
+        .modal-exito {
+            font-size: .8rem;
+            color: #03543f;
+            margin-bottom: 8px;
+            min-height: 18px;
+        }
+        /* Botones del modal */
+        .modal-botones { display: flex; gap: 10px; }
+        .modal-botones button {
+            flex: 1;
+            padding: 11px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: .06em;
+            transition: background .2s;
+        }
+        /* Botón confirmar azul */
+        .modal-confirmar { background: var(--blue); color: var(--white); }
+        .modal-confirmar:hover { background: var(--blue-mid); }
+        /* Botón cancelar gris claro */
+        .modal-cancelar { background: var(--blue-pale); color: var(--blue-mid); border: 1px solid var(--blue-light); }
+        .modal-cancelar:hover { background: #d4eaf8; }
     </style>
 </head>
 <body>
@@ -1142,6 +1235,70 @@
 // URL del servidor 
 const BASE = 'https://5000-firebase-izquierdoalex0852-1771872281714.cluster-xvr5pmatm5a4gx76fmat6kxt6o.cloudworkstations.dev';
 
+//  Contraseña
+//  Se llama antes de editar o eliminar cualquier registro. Devuelve true si es correcta, false si el usuario cancela o falla.
+const CLAVE = 'infinident2026'; // Contraseña del proyecto
+
+// Muestra el modal y espera la respuesta del usuario
+function pedirContrasena(accion) {
+    return new Promise(resolve => {
+
+        // Crea el modal y lo inserta en la página
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay';
+        overlay.innerHTML = `
+            <div class="modal-box">
+                <div class="modal-icon">🔒</div>
+                <p class="modal-titulo">Acceso Restringido</p>
+                <p class="modal-desc">Para <strong>${accion}</strong> este registro ingresa la contraseña.</p>
+                <input type="password" class="modal-input" id="modal-clave" placeholder="Contraseña" autocomplete="off">
+                <p class="modal-error" id="modal-msg"></p>
+                <div class="modal-botones">
+                    <button class="modal-confirmar" id="modal-ok">Confirmar</button>
+                    <button class="modal-cancelar" id="modal-no">Cancelar</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        const inputClave = overlay.querySelector('#modal-clave');
+        const msgEl      = overlay.querySelector('#modal-msg');
+        inputClave.focus(); // Enfoca el input al abrir
+
+        // Valida la contraseña ingresada
+        function verificar() {
+            if (inputClave.value === CLAVE) {
+                // Contraseña correcta: muestra mensaje verde y cierra
+                msgEl.className = 'modal-exito';
+                msgEl.textContent = '✅ Contraseña correcta, procediendo...';
+                setTimeout(() => {
+                    document.body.removeChild(overlay);
+                    resolve(true); // Permite continuar la acción
+                }, 800); // Espera 800ms para que se vea el mensaje
+            } else {
+                // Contraseña incorrecta: muestra mensaje rojo y limpia
+                msgEl.className = 'modal-error';
+                msgEl.textContent = '❌ Contraseña incorrecta, intenta de nuevo.';
+                inputClave.value = '';
+                inputClave.focus();
+            }
+        }
+
+        // Confirmar con el botón
+        overlay.querySelector('#modal-ok').addEventListener('click', verificar);
+
+        // También confirmar presionando Enter
+        inputClave.addEventListener('keydown', e => {
+            if (e.key === 'Enter') verificar();
+        });
+
+        // Cancelar: cierra sin hacer nada
+        overlay.querySelector('#modal-no').addEventListener('click', () => {
+            document.body.removeChild(overlay);
+            resolve(false); // Cancela la acción
+        });
+    });
+}
 
 //  Navegación por secciones
 //  Al hacer clic en un link del menú, oculta todo y muestra solo la sección correspondiente
@@ -1245,7 +1402,10 @@ document.getElementById('od-form').addEventListener('submit', async function(e) 
     } catch(e) { alert('Error: ' + e.message); }
 });
 
-window.odEditar = function(id) {
+window.odEditar = async function(id) {
+    // Pide contraseña antes de continuar
+    const autorizado = await pedirContrasena('editar'); 
+    if (!autorizado) return; // Si cancela o falla, no hace nada
     const o = odDatos.find(x => x._id === id);
     if (!o) return;
     document.getElementById('od-editId').value = o._id;
@@ -1264,6 +1424,10 @@ window.odEditar = function(id) {
 };
 
 window.odEliminar = async function(id, nombre) {
+    // Pide contraseña antes de continuar
+    const autorizado = await pedirContrasena('eliminar'); 
+    if (!autorizado) return; // Si cancela o falla, no hace nada
+
     if (!confirm(`¿Eliminar al Dr. ${nombre}?`)) return;
     try {
         await api('DELETE', '/api/odontologos/' + id);
@@ -1364,7 +1528,9 @@ document.getElementById('pac-form').addEventListener('submit', async function(e)
     } catch(e) { alert('Error: ' + e.message); }
 });
 
-window.pacEditar = function(id) {
+window.pacEditar = async function(id) {
+    const autorizado = await pedirContrasena('editar');
+    if (!autorizado) return;
     const p = pacDatos.find(x => x._id === id);
     if (!p) return;
     document.getElementById('pac-editId').value = p._id;
@@ -1389,6 +1555,8 @@ window.pacEditar = function(id) {
 };
 
 window.pacEliminar = async function(id, nombre) {
+    const autorizado = await pedirContrasena('eliminar');
+    if (!autorizado) return;
     if (!confirm(`¿Eliminar el expediente de ${nombre}?`)) return;
     try {
         await api('DELETE', '/api/pacientes/' + id);
@@ -1485,7 +1653,9 @@ document.getElementById('cit-form').addEventListener('submit', async function(e)
     } catch(e) { alert('Error: ' + e.message); }
 });
 
-window.citEditar = function(id) {
+window.citEditar = async function(id) {
+    const autorizado = await pedirContrasena('editar');
+    if (!autorizado) return;
     const c = citDatos.find(x => x._id === id);
     if (!c) return;
     document.getElementById('cit-editId').value = c._id;
@@ -1506,6 +1676,8 @@ window.citEditar = function(id) {
 };
 
 window.citEliminar = async function(id, nombre) {
+    const autorizado = await pedirContrasena('eliminar');
+    if (!autorizado) return;
     if (!confirm(`¿Eliminar la cita de ${nombre}?`)) return;
     try {
         await api('DELETE', '/api/citas/' + id);
@@ -1593,7 +1765,9 @@ document.getElementById('rec-form').addEventListener('submit', async function(e)
     } catch(e) { alert('Error: ' + e.message); }
 });
 
-window.recEditar = function(id) {
+window.recEditar = async function(id) {
+    const autorizado = await pedirContrasena('editar');
+    if (!autorizado) return;
     const r = recDatos.find(x => x._id === id);
     if (!r) return;
     document.getElementById('rec-editId').value = r._id;
@@ -1609,6 +1783,8 @@ window.recEditar = function(id) {
 };
 
 window.recEliminar = async function(id, nombre) {
+    const autorizado = await pedirContrasena('eliminar');
+    if (!autorizado) return;
     if (!confirm(`¿Eliminar la receta de ${nombre}?`)) return;
     try {
         await api('DELETE', '/api/recetas/' + id);
@@ -1701,7 +1877,9 @@ document.getElementById('his-form').addEventListener('submit', async function(e)
     } catch(e) { alert('Error: ' + e.message); }
 });
 
-window.hisEditar = function(id) {
+window.hisEditar = async function(id) {
+    const autorizado = await pedirContrasena('editar');
+    if (!autorizado) return;
     const h = hisDatos.find(x => x._id === id);
     if (!h) return;
     document.getElementById('his-editId').value = h._id;
@@ -1812,7 +1990,9 @@ document.getElementById('pag-form').addEventListener('submit', async function(e)
     } catch(e) { alert('Error: ' + e.message); }
 });
 
-window.pagEditar = function(id) {
+window.pagEditar = async function(id) {
+    const autorizado = await pedirContrasena('editar');
+    if (!autorizado) return;
     const p = pagDatos.find(x => x._id === id);
     if (!p) return;
     document.getElementById('pag-editId').value = p._id;
@@ -1830,6 +2010,8 @@ window.pagEditar = function(id) {
 };
 
 window.pagEliminar = async function(id, nombre) {
+    const autorizado = await pedirContrasena('eliminar');
+    if (!autorizado) return;
     if (!confirm(`¿Eliminar el pago de ${nombre}?`)) return;
     try {
         await api('DELETE', '/api/pagos/' + id);
@@ -1919,7 +2101,9 @@ document.getElementById('inv-form').addEventListener('submit', async function(e)
     } catch(e) { alert('Error: ' + e.message); }
 });
 
-window.invEditar = function(id) {
+window.invEditar = async function(id) {
+    const autorizado = await pedirContrasena('editar');
+    if (!autorizado) return;
     const i = invDatos.find(x => x._id === id);
     if (!i) return;
     document.getElementById('inv-editId').value = i._id;
@@ -1938,6 +2122,8 @@ window.invEditar = function(id) {
 };
 
 window.invEliminar = async function(id, producto) {
+    const autorizado = await pedirContrasena('eliminar');
+    if (!autorizado) return;
     if (!confirm(`¿Eliminar "${producto}" del almacén?`)) return;
     try {
         await api('DELETE', '/api/inventario/' + id);
